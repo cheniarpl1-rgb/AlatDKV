@@ -51,7 +51,7 @@ export default async function Ajukan({
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
-      {/* ============ 1. HERO + GAMBAR! 👈 BARU! ============ */}
+      {/* ============ 1. HERO + GAMBAR! ============ */}
       <div
         style={{
           borderRadius: 28,
@@ -124,7 +124,7 @@ export default async function Ajukan({
         </div>
       </div>
 
-      {/* ============ 2. PESAN ERROR KALAU GAGAL! 👈 BARU! WAJIB DI SOAL! ============ */}
+      {/* ============ 2. PESAN ERROR KALAU GAGAL! ============ */}
       {pesanError && (
         <div
           style={{
@@ -151,7 +151,7 @@ export default async function Ajukan({
         </div>
       )}
 
-      {/* ============ 3. LAYOUT 2 KOLOM! 👈 UPGRADE TOTAL! ============ */}
+      {/* ============ 3. LAYOUT 2 KOLOM! ============ */}
       <div
         style={{
           display: "grid",
@@ -426,7 +426,6 @@ export default async function Ajukan({
 
         {/* KANAN: PREVIEW ALAT + ATURAN! */}
         <div style={{ display: "grid", gap: 14 }}>
-          {/* Preview Alat yang Dipilih! */}
           {alatDipilih ? (
             <div
               style={{
@@ -535,19 +534,6 @@ export default async function Ajukan({
                   >
                     ✅ Tersedia {tersediaDipilih} unit
                   </span>
-                  <span
-                    style={{
-                      background: "#120826",
-                      border: "1px solid #4C1D95",
-                      color: "#C4B5FD",
-                      fontSize: 12,
-                      fontWeight: 800,
-                      padding: "6px 10px",
-                      borderRadius: 999,
-                    }}
-                  >
-                    📦 {terpakaiDipilih} dipinjam
-                  </span>
                 </div>
                 {tersediaDipilih <= 0 && (
                   <div
@@ -564,23 +550,6 @@ export default async function Ajukan({
                     ⛔ Stok habis! Pilih alat lain ya!
                   </div>
                 )}
-                <Link
-                  href={`/alat/${alatDipilih.id}`}
-                  style={{
-                    display: "block",
-                    textAlign: "center",
-                    marginTop: 12,
-                    background: "white",
-                    color: "#6D28D9",
-                    padding: "11px",
-                    borderRadius: 999,
-                    fontWeight: 900,
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  Lihat Detail Alat →
-                </Link>
               </div>
             </div>
           ) : (
@@ -596,8 +565,7 @@ export default async function Ajukan({
               <div style={{ fontSize: 40 }}>🎬</div>
               <b style={{ color: "white", fontSize: 16 }}>Belum Pilih Alat?</b>
               <p style={{ color: "#C4B5FD", fontSize: 13, margin: "6px 0 0" }}>
-                Pilih alat di form sebelah kiri, atau klik alat di bawah ini!
-                Preview-nya langsung muncul di sini!
+                Pilih alat di form sebelah kiri atau lihat daftar alat.
               </p>
               <Link
                 href="/alat"
@@ -617,110 +585,6 @@ export default async function Ajukan({
               </Link>
             </div>
           )}
-
-          {/* Aturan Pinjam! */}
-          <div
-            style={{
-              background: "linear-gradient(135deg,#1E103A,#3B0764)",
-              border: "1px solid #7C3AED",
-              borderRadius: 24,
-              padding: 18,
-            }}
-          >
-            <b style={{ color: "white", fontSize: 15 }}>
-              Aturan Pinjam? Gampang! 🎯
-            </b>
-            <div style={{ display: "grid", gap: 8, marginTop: 12 }}>
-              {[
-                ["1️⃣", "Jumlah 1-5 unit", "Per peminjaman, gak boleh lebih!"],
-                [
-                  "2️⃣",
-                  "Maks 2 aktif / orang",
-                  "Kalau udah 2, tunggu yang lama kembali dulu!",
-                ],
-                ["3️⃣", "Pinjam maks 3 hari", "Kembali - Pinjam maks 3 hari!"],
-                ["4️⃣", "Bukan Sabtu / Minggu", "Lab tutup, gak bisa pinjam!"],
-                [
-                  "5️⃣",
-                  "Maks 14 hari ke depan",
-                  "Gak bisa booking jauh-jauh hari!",
-                ],
-                [
-                  "6️⃣",
-                  "Stok harus cukup",
-                  "Kalau stok habis, ditolak pesan ramah!",
-                ],
-              ].map(([icon, judul, desc]) => (
-                <div
-                  key={judul}
-                  style={{
-                    background: "#120826",
-                    border: "1px solid #4C1D95",
-                    borderRadius: 14,
-                    padding: 12,
-                    display: "flex",
-                    gap: 10,
-                  }}
-                >
-                  <span style={{ fontSize: 18 }}>{icon}</span>
-                  <div>
-                    <b
-                      style={{ color: "white", fontSize: 13, display: "block" }}
-                    >
-                      {judul}
-                    </b>
-                    <div style={{ color: "#C4B5FD", fontSize: 12 }}>{desc}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Cara Cek Status! */}
-          <div
-            style={{
-              background: "#14532D",
-              border: "1px solid #22C55E",
-              borderRadius: 20,
-              padding: 16,
-            }}
-          >
-            <b style={{ color: "white", fontSize: 14 }}>
-              Setelah Kirim, Terus Ngapain? 🤔
-            </b>
-            <p
-              style={{
-                color: "#BBF7D0",
-                fontSize: 13,
-                lineHeight: 1.7,
-                margin: "6px 0 0",
-              }}
-            >
-              1. Catat <b style={{ color: "white" }}>nomor peminjaman</b> yang
-              muncul di halaman sukses!
-              <br />
-              2. Buka <b style={{ color: "white" }}>/cek</b>, masukin nomor +
-              nama kamu!
-              <br />
-              3. Tunggu admin setujui, biasanya di jam kerja!
-            </p>
-            <Link
-              href="/cek"
-              style={{
-                display: "inline-block",
-                marginTop: 10,
-                background: "white",
-                color: "#065F46",
-                padding: "10px 18px",
-                borderRadius: 999,
-                fontWeight: 900,
-                textDecoration: "none",
-                fontSize: 13,
-              }}
-            >
-              🔍 Cek Status Saya →
-            </Link>
-          </div>
         </div>
       </div>
     </div>
