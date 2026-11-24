@@ -5,7 +5,7 @@
 // SESUAI SOAL E2: Login admin, sandi salah tampil pesan galat, yang sudah masuk dialihkan ke /admin!
 
 import { loginAdmin } from "./actions";
-import TombolMata from "./TombolMata"; // 👈 BARU! Tombol 👁-nya!
+import TombolMata from "./TombolMata";
 import Link from "next/link";
 
 export default async function Login({
@@ -147,42 +147,11 @@ export default async function Login({
               Setujui peminjaman, tolak yang stoknya habis, catat kondisi
               kembali, kelola stok alat — semua dari sini!
             </p>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 8,
-                marginTop: 14,
-              }}
-            >
-              {[
-                ["✅", "Setujui / Tolak"],
-                ["📦", "Kembalikan + Kondisi"],
-                ["🛠", "Kelola Stok Alat"],
-                ["⚠", "Lihat Terlambat"],
-              ].map(([icon, teks]) => (
-                <div
-                  key={teks}
-                  style={{
-                    background: "rgba(0,0,0,0.35)",
-                    border: "1px solid rgba(255,255,255,0.3)",
-                    borderRadius: 12,
-                    padding: "10px 12px",
-                    color: "white",
-                    fontSize: 12,
-                    fontWeight: 800,
-                  }}
-                >
-                  {icon} {teks}
-                </div>
-              ))}
-            </div>
           </div>
         </div>
 
         {/* KANAN: FORM LOGIN! */}
         <div style={{ padding: 24 }}>
-          {/* Logo kecil di atas form! */}
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span
               style={{
@@ -207,22 +176,8 @@ export default async function Login({
                 AlatDKV • Lab DKV
               </span>
             </div>
-            <span
-              style={{
-                marginLeft: "auto",
-                background: "#14532D",
-                color: "#BBF7D0",
-                fontSize: 11,
-                fontWeight: 900,
-                padding: "5px 10px",
-                borderRadius: 999,
-              }}
-            >
-              🔒 AMAN
-            </span>
           </div>
 
-          {/* PESAN GALAT KALAU SANDI SALAH! WAJIB DI SOAL! */}
           {adaError && (
             <div
               style={{
@@ -251,8 +206,7 @@ export default async function Login({
                     marginTop: 2,
                   }}
                 >
-                  Pastikan huruf besar / kecil-nya benar. Kalau lupa, tanya guru
-                  pembimbing!
+                  Pastikan huruf besar / kecil-nya benar.
                 </span>
               </span>
             </div>
@@ -281,20 +235,8 @@ export default async function Login({
                     fontSize: 14,
                   }}
                 />
-                {/* 👈 FIX! Tadinya <button onClick={...}> di sini! Sekarang pake component! */}
                 <TombolMata />
               </div>
-              <span
-                style={{
-                  color: "#A78BFA",
-                  fontSize: 11,
-                  fontWeight: 400,
-                  display: "block",
-                  marginTop: 6,
-                }}
-              >
-                🔒 Kata sandi tidak pernah ditampilkan di layar / GitHub. Aman!
-              </span>
             </label>
 
             <button
@@ -312,35 +254,6 @@ export default async function Login({
             >
               Masuk ke Admin →
             </button>
-
-            <div
-              style={{
-                background: "#120826",
-                border: "1px solid #4C1D95",
-                borderRadius: 14,
-                padding: 12,
-              }}
-            >
-              <b style={{ color: "white", fontSize: 12 }}>
-                Setelah login, kamu bisa:
-              </b>
-              <div
-                style={{
-                  color: "#C4B5FD",
-                  fontSize: 12,
-                  lineHeight: 1.7,
-                  marginTop: 4,
-                }}
-              >
-                ✅ Lihat semua permohonan (termasuk yang terlambat!)
-                <br />
-                ✅ Serahkan / Tolak (wajib isi alasan!)
-                <br />
-                ✅ Kembalikan + catat kondisi (baik / rusak ringan / rusak
-                berat!)
-                <br />✅ Tambah alat, ubah stok, aktif / nonaktifkan!
-              </div>
-            </div>
           </form>
 
           <div
@@ -363,96 +276,8 @@ export default async function Login({
             >
               ← Beranda
             </Link>
-            <Link
-              href="/alat"
-              style={{
-                flex: 1,
-                textAlign: "center",
-                background: "white",
-                color: "#6D28D9",
-                padding: "11px",
-                borderRadius: 999,
-                fontWeight: 900,
-                textDecoration: "none",
-                fontSize: 13,
-              }}
-            >
-              Lihat Alat →
-            </Link>
           </div>
-
-          <p
-            style={{
-              color: "#A78BFA",
-              fontSize: 11,
-              textAlign: "center",
-              margin: "14px 0 0",
-            }}
-          >
-            Bukan admin? Kamu tetap bisa{" "}
-            <Link href="/ajukan" style={{ color: "white", fontWeight: 800 }}>
-              ajukan pinjam
-            </Link>{" "}
-            &{" "}
-            <Link href="/cek" style={{ color: "white", fontWeight: 800 }}>
-              cek status
-            </Link>{" "}
-            tanpa login!
-          </p>
         </div>
-      </div>
-
-      {/* ============ INFO KEAMANAN DI BAWAH! ============ */}
-      <div
-        style={{
-          marginTop: 16,
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))",
-          gap: 12,
-        }}
-      >
-        {[
-          [
-            "🛡",
-            "RLS Aktif!",
-            "Data pribadi hanya bisa dibaca server, bukan publik!",
-          ],
-          [
-            "🔐",
-            "Cookie HttpOnly!",
-            "Sesi admin disimpan aman, gak bisa dicuri JS!",
-          ],
-          [
-            "🚪",
-            "Logout = Terkunci!",
-            "Setelah logout, /admin tidak bisa dibuka lagi!",
-          ],
-        ].map(([icon, judul, desc]) => (
-          <div
-            key={judul}
-            style={{
-              background: "#1E103A",
-              border: "1px solid #4C1D95",
-              borderRadius: 16,
-              padding: 14,
-            }}
-          >
-            <div style={{ fontSize: 20 }}>{icon}</div>
-            <b
-              style={{
-                color: "white",
-                fontSize: 13,
-                display: "block",
-                marginTop: 6,
-              }}
-            >
-              {judul}
-            </b>
-            <div style={{ color: "#C4B5FD", fontSize: 12, marginTop: 2 }}>
-              {desc}
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );
