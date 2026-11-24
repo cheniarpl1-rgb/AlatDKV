@@ -1,18 +1,13 @@
-// app/page.tsx - Beranda AlatDKV - JUARA 1 DUNIA! FIX Next.js 16!
-// Colorful, anti-white 100%, sangat modern, sangat memukau,
-// tata letak sangat rapi, kayak website yang pernah Juara 1 dunia!
-// FIX: Hapus `export const dynamic` karena TIDAK COCOK dengan cacheComponents di Next.js 16!
-// Ganti pakai `connection()` biar data tetap realtime!
-
+// app/page.tsx - Beranda AlatDKV - JUARA 1 DUNIA!
 import { supabasePublik } from "@/lib/supabase";
 import { gambarAlat } from "@/lib/gambar";
 import Link from "next/link";
 import AlatCarousel from "./AlatCarousel";
-import { connection } from "next/server";
+import { unstable_noStore as noStore } from "next/cache";
 
 export default async function Home() {
-  // 👈 INI PENGGANTI `force-dynamic` DI NEXT.JS 16! WAJIB ADA!
-  await connection();
+  // 👈 PENGGANTI dynamic = "force-dynamic" DI NEXT.JS 16 DENGAN CACHECOMPONENTS!
+  noStore();
 
   const { data } = await supabasePublik()
     .from("alat")
@@ -39,7 +34,7 @@ export default async function Home() {
 
   return (
     <div>
-      {/* ============ 1. HERO + GAMBAR UNSPLASH + SHADOW UNGU! 👈 UPGRADE! ============ */}
+      {/* ============ 1. HERO + GAMBAR UNSPLASH + SHADOW UNGU! ============ */}
       <div
         style={{
           borderRadius: 28,
@@ -171,7 +166,7 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* ============ 2. STATISTIK WARNA-WARNI! 👈 BARU! ============ */}
+      {/* ============ 2. STATISTIK WARNA-WARNI! ============ */}
       <div
         style={{
           display: "grid",
@@ -225,12 +220,12 @@ export default async function Home() {
         ))}
       </div>
 
-      {/* ============ 3. CAROUSEL OTOMATIS! (TETEP ADA, PUNYA LO UDAH BAGUS!) ============ */}
+      {/* ============ 3. CAROUSEL OTOMATIS! ============ */}
       <div style={{ marginTop: 22 }}>
         <AlatCarousel list={list} />
       </div>
 
-      {/* ============ 4. KATEGORI CEPAT! 👈 BARU! BIAR PENGUJI LANGSUNG KLIK! ============ */}
+      {/* ============ 4. KATEGORI CEPAT! ============ */}
       <div style={{ marginTop: 22 }}>
         <h2
           style={{ color: "white", fontSize: 24, fontWeight: 900, margin: 0 }}
@@ -320,7 +315,7 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* ============ 5. CARA PINJAM 3 LANGKAH! 👈 BARU! KAYAK WEBSITE JUARA DUNIA! ============ */}
+      {/* ============ 5. CARA PINJAM 3 LANGKAH! ============ */}
       <div
         style={{
           marginTop: 22,
@@ -412,7 +407,7 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* ============ 6. ATURAN PINJAM! (PUNYA LO TADI, GUE UPGRADE JADI KARTU!) ============ */}
+      {/* ============ 6. ATURAN PINJAM! ============ */}
       <div
         style={{
           marginTop: 22,
@@ -498,87 +493,6 @@ export default async function Home() {
           >
             Cek Status Saya
           </Link>
-        </div>
-      </div>
-
-      {/* ============ 7. CTA BAWAH + GAMBAR UNSPLASH! 👈 BARU! ============ */}
-      <div
-        style={{
-          marginTop: 22,
-          borderRadius: 24,
-          overflow: "hidden",
-          position: "relative",
-          border: "1px solid rgba(255,255,255,0.4)",
-        }}
-      >
-        <img
-          src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=1600&auto=format&fit=crop"
-          alt="Pinjam Alat"
-          style={{
-            width: "100%",
-            height: 200,
-            objectFit: "cover",
-            display: "block",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(90deg, rgba(245,158,11,0.92), rgba(236,72,153,0.92), rgba(139,92,246,0.92))",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 24,
-            textAlign: "center",
-          }}
-        >
-          <h3
-            style={{ color: "white", fontSize: 22, fontWeight: 900, margin: 0 }}
-          >
-            Butuh Alat Buat Tugas Besok? 🚀
-          </h3>
-          <p style={{ color: "white", opacity: 0.9, fontSize: 13 }}>
-            Ajukan sekarang, besok tinggal ambil di lab!
-          </p>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              justifyContent: "center",
-              flexWrap: "wrap",
-              marginTop: 12,
-            }}
-          >
-            <Link
-              href="/ajukan"
-              style={{
-                background: "#120826",
-                color: "white",
-                padding: "12px 26px",
-                borderRadius: 999,
-                fontWeight: 900,
-                textDecoration: "none",
-              }}
-            >
-              📝 Ajukan Sekarang →
-            </Link>
-            <Link
-              href="/alat"
-              style={{
-                background: "white",
-                color: "#DB2777",
-                padding: "12px 22px",
-                borderRadius: 999,
-                fontWeight: 900,
-                textDecoration: "none",
-              }}
-            >
-              🎬 Lihat Alat
-            </Link>
-          </div>
         </div>
       </div>
     </div>

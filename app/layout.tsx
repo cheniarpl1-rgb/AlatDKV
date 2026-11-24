@@ -1,7 +1,4 @@
-// app/layout.tsx - Layout AlatDKV - JUARA 1 DUNIA!
-// Colorful, anti-white 100%, sangat modern, sangat memukau,
-// tata letak sangat rapi, kayak website yang pernah Juara 1 dunia!
-
+// app/layout.tsx - Layout AlatDKV - Tema Feminim Pastel
 import "./globals.css";
 import Link from "next/link";
 
@@ -15,15 +12,15 @@ export default function RootLayout({
       <body
         style={{
           margin: 0,
-          background: "#120826",
-          color: "white",
+          background: "#FFF5F7", // Latar belakang putih pink pastel yang lembut
+          color: "#4A3B5C", // Warna teks utama ungu gelap lembut yang ramah di mata
           fontFamily: "system-ui, -apple-system, sans-serif",
           minHeight: "100vh",
           position: "relative",
           overflowX: "hidden",
         }}
       >
-        {/* ============ BACKGROUND BOLA-BOLA WARNA BLUR! 👈 BARU! ============ */}
+        {/* ============ BACKGROUND BOLA-BOLA PASTEL BLUR! ============ */}
         <div
           style={{
             position: "fixed",
@@ -42,8 +39,8 @@ export default function RootLayout({
               height: 320,
               borderRadius: "50%",
               background:
-                "radial-gradient(circle, rgba(236,72,153,0.35), transparent 70%)",
-              filter: "blur(40px)",
+                "radial-gradient(circle, rgba(255,182,193,0.4), transparent 70%)", // Soft Pink Pastel
+              filter: "blur(50px)",
             }}
           />
           <div
@@ -55,8 +52,8 @@ export default function RootLayout({
               height: 360,
               borderRadius: "50%",
               background:
-                "radial-gradient(circle, rgba(139,92,246,0.4), transparent 70%)",
-              filter: "blur(40px)",
+                "radial-gradient(circle, rgba(221,160,221,0.4), transparent 70%)", // Lavender Pastel
+              filter: "blur(50px)",
             }}
           />
           <div
@@ -68,44 +65,30 @@ export default function RootLayout({
               height: 400,
               borderRadius: "50%",
               background:
-                "radial-gradient(circle, rgba(245,158,11,0.25), transparent 70%)",
-              filter: "blur(40px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "60%",
-              width: 280,
-              height: 280,
-              borderRadius: "50%",
-              background:
-                "radial-gradient(circle, rgba(34,211,238,0.25), transparent 70%)",
-              filter: "blur(40px)",
+                "radial-gradient(circle, rgba(255,218,185,0.4), transparent 70%)", // Peach Pastel
+              filter: "blur(50px)",
             }}
           />
         </div>
 
-        {/* ============ NAVBAR KACA + NEMPEL DI ATAS! 👈 UPGRADE TOTAL! ============ */}
+        {/* ============ NAVBAR KACA PASTEL! ============ */}
         <header
           style={{
             position: "sticky",
             top: 0,
             zIndex: 50,
-            background: "rgba(18,8,38,0.85)",
+            background: "rgba(255, 245, 247, 0.85)",
             backdropFilter: "blur(16px)",
             WebkitBackdropFilter: "blur(16px)",
-            borderBottom: "1px solid rgba(255,255,255,0.15)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+            borderBottom: "1px solid rgba(219, 112, 147, 0.2)",
+            boxShadow: "0 10px 30px rgba(219,112,147,0.08)",
           }}
         >
-          {/* Garis gradasi di atas navbar! */}
           <div
             style={{
               height: 3,
               background:
-                "linear-gradient(90deg,#F59E0B,#EC4899,#8B5CF6,#22D3EE,#10B981)",
+                "linear-gradient(90deg,#FFB6C1,#DDA0DD,#FFDAB9,#98FB98)",
             }}
           />
           <nav
@@ -134,16 +117,16 @@ export default function RootLayout({
                   width: 44,
                   height: 44,
                   borderRadius: 14,
-                  background: "linear-gradient(135deg,#F59E0B,#EC4899,#8B5CF6)",
+                  background: "linear-gradient(135deg,#FFB6C1,#DDA0DD,#FFDAB9)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   fontSize: 22,
-                  boxShadow: "0 8px 24px rgba(236,72,153,0.5)",
-                  border: "1px solid rgba(255,255,255,0.3)",
+                  boxShadow: "0 8px 20px rgba(221,160,221,0.4)",
+                  border: "1px solid rgba(255,255,255,0.8)",
                 }}
               >
-                🎬
+                🌸
               </span>
               <span
                 style={{
@@ -157,7 +140,7 @@ export default function RootLayout({
                     fontWeight: 900,
                     fontSize: 20,
                     background:
-                      "linear-gradient(90deg,#FDE68A,#F472B6,#A78BFA)",
+                      "linear-gradient(90deg,#DB7093,#9370DB,#8A2BE2)",
                     WebkitBackgroundClip: "text",
                     WebkitTextFillColor: "transparent",
                   }}
@@ -168,11 +151,11 @@ export default function RootLayout({
                   style={{
                     fontSize: 10,
                     fontWeight: 800,
-                    color: "#C4B5FD",
+                    color: "#9370DB",
                     letterSpacing: 1,
                   }}
                 >
-                  LAB DKV • PINJAM ALAT
+                  LAB DKV • PASTEL EDITION
                 </span>
               </span>
             </Link>
@@ -190,14 +173,14 @@ export default function RootLayout({
               <Link
                 href="/"
                 style={{
-                  color: "white",
+                  color: "#5B4B6E",
                   textDecoration: "none",
                   fontWeight: 800,
                   fontSize: 13,
                   padding: "9px 14px",
                   borderRadius: 999,
-                  background: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.15)",
+                  background: "rgba(221,160,221,0.15)",
+                  border: "1px solid rgba(221,160,221,0.3)",
                 }}
               >
                 🏠 Beranda
@@ -205,14 +188,14 @@ export default function RootLayout({
               <Link
                 href="/alat"
                 style={{
-                  color: "white",
+                  color: "#5B4B6E",
                   textDecoration: "none",
                   fontWeight: 800,
                   fontSize: 13,
                   padding: "9px 14px",
                   borderRadius: 999,
-                  background: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.15)",
+                  background: "rgba(221,160,221,0.15)",
+                  border: "1px solid rgba(221,160,221,0.3)",
                 }}
               >
                 🎬 Alat
@@ -220,14 +203,14 @@ export default function RootLayout({
               <Link
                 href="/ajukan"
                 style={{
-                  color: "white",
+                  color: "#5B4B6E",
                   textDecoration: "none",
                   fontWeight: 800,
                   fontSize: 13,
                   padding: "9px 14px",
                   borderRadius: 999,
-                  background: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.15)",
+                  background: "rgba(221,160,221,0.15)",
+                  border: "1px solid rgba(221,160,221,0.3)",
                 }}
               >
                 📝 Ajukan
@@ -235,14 +218,14 @@ export default function RootLayout({
               <Link
                 href="/cek"
                 style={{
-                  color: "white",
+                  color: "#5B4B6E",
                   textDecoration: "none",
                   fontWeight: 800,
                   fontSize: 13,
                   padding: "9px 14px",
                   borderRadius: 999,
-                  background: "rgba(255,255,255,0.1)",
-                  border: "1px solid rgba(255,255,255,0.15)",
+                  background: "rgba(221,160,221,0.15)",
+                  border: "1px solid rgba(221,160,221,0.3)",
                 }}
               >
                 🔍 Cek Status
@@ -250,56 +233,24 @@ export default function RootLayout({
               <Link
                 href="/admin"
                 style={{
-                  background: "linear-gradient(90deg,#F59E0B,#EC4899)",
-                  color: "white",
+                  background: "linear-gradient(90deg,#FFB6C1,#DDA0DD)",
+                  color: "#4A3B5C",
                   padding: "9px 16px",
                   borderRadius: 999,
                   fontWeight: 900,
                   textDecoration: "none",
                   fontSize: 13,
-                  boxShadow: "0 8px 24px rgba(236,72,153,0.45)",
-                  border: "1px solid rgba(255,255,255,0.3)",
+                  boxShadow: "0 8px 20px rgba(255,182,193,0.4)",
+                  border: "1px solid rgba(255,255,255,0.6)",
                 }}
               >
                 🛠 Admin →
               </Link>
             </div>
           </nav>
-
-          {/* Ticker kecil di bawah navbar! Biar kayak website berita! */}
-          <div
-            style={{
-              background: "linear-gradient(90deg,#1E103A,#3B0764)",
-              borderTop: "1px solid rgba(255,255,255,0.1)",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                maxWidth: 1100,
-                margin: "0 auto",
-                padding: "7px 16px",
-                display: "flex",
-                gap: 16,
-                fontSize: 11,
-                fontWeight: 700,
-                color: "#DDD6FE",
-                whiteSpace: "nowrap",
-                overflowX: "auto",
-                scrollbarWidth: "none",
-              }}
-            >
-              <span>⚡ Ajukan 30 Detik!</span>
-              <span>📦 Stok Realtime!</span>
-              <span>📷 Kamera • 💡 Lampu • 🎙 Mic • ✏️ Tablet</span>
-              <span>🎯 Maks 2 Aktif / Orang</span>
-              <span>📅 Maks 3 Hari Pinjam</span>
-              <span>🚫 Bukan Sabtu / Minggu</span>
-            </div>
-          </div>
         </header>
 
-        {/* ============ ISI HALAMAN! ============ */}
+        {/* ============ ISI HALAMAN ============ */}
         <main
           style={{
             maxWidth: 1100,
@@ -310,12 +261,13 @@ export default function RootLayout({
           {children}
         </main>
 
-        {/* ============ FOOTER 3 KOLOM! 👈 UPGRADE TOTAL! ============ */}
+        {/* ============ FOOTER PASTEL ============ */}
         <footer
           style={{
-            background: "linear-gradient(180deg,#1E103A,#120826)",
-            borderTop: "1px solid #4C1D95",
-            marginTop: 10,
+            background: "linear-gradient(180deg,#FFE4E1,#FFF0F5)",
+            borderTop: "1px solid rgba(221,160,221,0.3)",
+            marginTop: 20,
+            color: "#5B4B6E",
           }}
         >
           <div
@@ -323,277 +275,13 @@ export default function RootLayout({
               maxWidth: 1100,
               margin: "0 auto",
               padding: "28px 16px 16px",
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))",
-              gap: 20,
-            }}
-          >
-            {/* Kolom 1: Logo + Deskripsi */}
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 12,
-                    background:
-                      "linear-gradient(135deg,#F59E0B,#EC4899,#8B5CF6)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 20,
-                  }}
-                >
-                  🎬
-                </span>
-                <b
-                  style={{
-                    fontSize: 18,
-                    background: "linear-gradient(90deg,#FDE68A,#F472B6)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  AlatDKV
-                </b>
-              </div>
-              <p
-                style={{
-                  color: "#C4B5FD",
-                  fontSize: 13,
-                  lineHeight: 1.6,
-                  margin: "10px 0 0",
-                }}
-              >
-                Aplikasi Peminjaman Alat Laboratorium DKV. Pinjam kamera, lampu,
-                mikrofon, tablet — tanpa antre, tanpa kertas!
-              </p>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 6,
-                  marginTop: 12,
-                  flexWrap: "wrap",
-                }}
-              >
-                <span
-                  style={{
-                    background: "#14532D",
-                    color: "#BBF7D0",
-                    fontSize: 11,
-                    fontWeight: 900,
-                    padding: "5px 10px",
-                    borderRadius: 999,
-                  }}
-                >
-                  ✅ RLS AKTIF
-                </span>
-                <span
-                  style={{
-                    background: "#1E3A8A",
-                    color: "#BFDBFE",
-                    fontSize: 11,
-                    fontWeight: 900,
-                    padding: "5px 10px",
-                    borderRadius: 999,
-                  }}
-                >
-                  🛡 DATA AMAN
-                </span>
-                <span
-                  style={{
-                    background: "#7C2D12",
-                    color: "#FED7AA",
-                    fontSize: 11,
-                    fontWeight: 900,
-                    padding: "5px 10px",
-                    borderRadius: 999,
-                  }}
-                >
-                  ⚡ REALTIME
-                </span>
-              </div>
-            </div>
-
-            {/* Kolom 2: Menu Cepat */}
-            <div>
-              <b style={{ color: "white", fontSize: 14 }}>Menu Cepat 🚀</b>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  marginTop: 12,
-                }}
-              >
-                <Link
-                  href="/"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  🏠 Beranda
-                </Link>
-                <Link
-                  href="/alat"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  🎬 Daftar Alat
-                </Link>
-                <Link
-                  href="/ajukan"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  📝 Ajukan Peminjaman
-                </Link>
-                <Link
-                  href="/cek"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  🔍 Cek Status
-                </Link>
-                <Link
-                  href="/admin"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  🛠 Admin
-                </Link>
-              </div>
-            </div>
-
-            {/* Kolom 3: Kategori */}
-            <div>
-              <b style={{ color: "white", fontSize: 14 }}>Kategori Alat 🎬</b>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  marginTop: 12,
-                }}
-              >
-                <Link
-                  href="/alat?kategori=kamera"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  📷 Kamera
-                </Link>
-                <Link
-                  href="/alat?kategori=pencahayaan"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  💡 Pencahayaan
-                </Link>
-                <Link
-                  href="/alat?kategori=audio"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  🎙 Audio
-                </Link>
-                <Link
-                  href="/alat?kategori=tablet"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  ✏️ Tablet
-                </Link>
-                <Link
-                  href="/alat?kategori=aksesoris"
-                  style={{
-                    color: "#C4B5FD",
-                    textDecoration: "none",
-                    fontSize: 13,
-                  }}
-                >
-                  🎒 Aksesoris
-                </Link>
-              </div>
-            </div>
-
-            {/* Kolom 4: Aturan */}
-            <div>
-              <b style={{ color: "white", fontSize: 14 }}>Aturan Pinjam 🎯</b>
-              <div
-                style={{
-                  color: "#C4B5FD",
-                  fontSize: 13,
-                  lineHeight: 1.8,
-                  marginTop: 12,
-                }}
-              >
-                • Jumlah 1-5 unit
-                <br />
-                • Maks 2 aktif / orang
-                <br />
-                • Pinjam maks 3 hari
-                <br />
-                • Maks 14 hari ke depan
-                <br />• Bukan Sabtu / Minggu
-              </div>
-              <Link
-                href="/ajukan"
-                style={{
-                  display: "inline-block",
-                  marginTop: 12,
-                  background: "linear-gradient(90deg,#F59E0B,#EC4899)",
-                  color: "white",
-                  padding: "10px 18px",
-                  borderRadius: 999,
-                  fontWeight: 900,
-                  textDecoration: "none",
-                  fontSize: 13,
-                }}
-              >
-                Ajukan Sekarang →
-              </Link>
-            </div>
-          </div>
-
-          {/* Baris bawah footer */}
-          <div
-            style={{
-              borderTop: "1px solid rgba(255,255,255,0.1)",
-              padding: "14px 16px",
               textAlign: "center",
-              color: "#A78BFA",
-              fontSize: 12,
+              fontSize: 13,
             }}
           >
-            AlatDKV • Lab Desain Komunikasi Visual • Pinjam Alat Tanpa Ribet! 🎬
-            • Dibuat untuk Final Project Pekan 6 — Junior Web Developer
+            <p style={{ margin: 0, fontWeight: 700 }}>
+              AlatDKV • Lab Desain Komunikasi Visual • Edisi Feminim Pastel ✨
+            </p>
           </div>
         </footer>
       </body>
