@@ -161,7 +161,7 @@ export default async function Admin({
             {jmlTerlambat > 0 && (
               <b style={{ color: "#FCA5A5" }}>
                 {" "}
-                • ⚠ Ada {jmlTerlambat} terlambat, segera tindak lanjuti!
+                - ⚠ Ada {jmlTerlambat} terlambat, segera tindak lanjuti!
               </b>
             )}
           </p>
