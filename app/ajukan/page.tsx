@@ -1,9 +1,4 @@
-// app/ajukan/page.tsx - Ajukan Peminjaman AlatDKV - JUARA 1 DUNIA!
-// Colorful, anti-white 100%, sangat modern, sangat memukau,
-// tata letak sangat rapi, kayak website yang pernah Juara 1 dunia!
-// SESUAI SOAL E2: Formulir alat, tanggal pinjam/kembali, jumlah, peminjam, kelas, keperluan!
-// FIX Next.js 16: Hapus `dynamic`, ganti `connection()`!
-
+// app/ajukan/page.tsx - Ajukan Peminjaman AlatDKV - Tema Feminim Pastel
 import { supabasePublik } from "@/lib/supabase";
 import { ajukanPinjam } from "./actions";
 import { gambarAlat, iconAlat } from "@/lib/gambar";
@@ -15,7 +10,6 @@ export default async function Ajukan({
 }: {
   searchParams: Promise<{ alat_id?: string; error?: string }>;
 }) {
-  // 👈 PENGGANTI `force-dynamic` DI NEXT.JS 16! WAJIB ADA!
   await connection();
 
   const p = await searchParams;
@@ -26,12 +20,10 @@ export default async function Ajukan({
     .order("id");
   const listAlat = alat || [];
 
-  // Alat yang dipilih (dari ?alat_id=... atau dari form sebelumnya)!
   const alatDipilih = listAlat.find(
     (a: any) => String(a.id) === String(p.alat_id),
   );
 
-  // Hitung stok tersedia buat alat yang dipilih!
   let tersediaDipilih = 0;
   let terpakaiDipilih = 0;
   if (alatDipilih) {
@@ -51,14 +43,14 @@ export default async function Ajukan({
 
   return (
     <div style={{ maxWidth: 900, margin: "0 auto" }}>
-      {/* ============ 1. HERO + GAMBAR! ============ */}
+      {/* ============ HERO BANNER PASTEL ============ */}
       <div
         style={{
           borderRadius: 28,
           overflow: "hidden",
           position: "relative",
-          border: "1px solid rgba(255,255,255,0.25)",
-          boxShadow: "0 20px 60px rgba(109,40,217,0.4)",
+          border: "1px solid rgba(255,255,255,0.8)",
+          boxShadow: "0 20px 40px rgba(221,160,221,0.25)",
         }}
       >
         <img
@@ -69,6 +61,7 @@ export default async function Ajukan({
             height: 200,
             objectFit: "cover",
             display: "block",
+            filter: "brightness(0.9)",
           }}
         />
         <div
@@ -76,7 +69,7 @@ export default async function Ajukan({
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(180deg, rgba(18,8,38,0.2), rgba(18,8,38,0.92))",
+              "linear-gradient(180deg, rgba(255,240,245,0.2), rgba(74,59,92,0.85))",
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-end",
@@ -85,8 +78,8 @@ export default async function Ajukan({
         >
           <span
             style={{
-              background: "white",
-              color: "#6D28D9",
+              background: "rgba(255,255,255,0.9)",
+              color: "#8A2BE2",
               fontSize: 11,
               fontWeight: 900,
               padding: "6px 12px",
@@ -94,7 +87,7 @@ export default async function Ajukan({
               width: "fit-content",
             }}
           >
-            📝 AJUKAN PEMINJAMAN • 30 DETIK SELESAI!
+            🌸 FORMULIR PEMINJAMAN • 30 DETIK SELESAI
           </span>
           <h1
             style={{
@@ -109,49 +102,41 @@ export default async function Ajukan({
             <br />
             <span
               style={{
-                background: "linear-gradient(90deg,#FDE68A,#F472B6,#A78BFA)",
+                background: "linear-gradient(90deg,#FFB6C1,#FFDAB9,#E6E6FA)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
             >
-              Gak Perlu Antre di Lab!
+              Tanpa Perlu Antre!
             </span>
           </h1>
-          <p style={{ color: "#DDD6FE", fontSize: 13, margin: "8px 0 0" }}>
-            Isi form di bawah, tunggu admin setujui, cek status di{" "}
-            <b style={{ color: "white" }}>/cek</b>! Gampang!
-          </p>
         </div>
       </div>
 
-      {/* ============ 2. PESAN ERROR KALAU GAGAL! ============ */}
       {pesanError && (
         <div
           style={{
             marginTop: 14,
-            background: "#7F1D1D",
-            border: "1px solid #EF4444",
-            color: "white",
+            background: "#FFC0CB",
+            border: "1px solid #DB7093",
+            color: "#4A3B5C",
             padding: 16,
             borderRadius: 20,
             display: "flex",
             gap: 10,
           }}
         >
-          <span style={{ fontSize: 24 }}>❌</span>
+          <span style={{ fontSize: 24 }}>⚠️</span>
           <div>
-            <b>Pengajuan Gagal! 😢</b>
+            <b>Pengajuan Gagal</b>
             <p style={{ margin: "4px 0 0", fontSize: 13, lineHeight: 1.6 }}>
               {pesanError}
-            </p>
-            <p style={{ margin: "8px 0 0", fontSize: 12, opacity: 0.85 }}>
-              Coba ganti alat / tanggal / jumlah-nya, terus kirim lagi ya!
             </p>
           </div>
         </div>
       )}
 
-      {/* ============ 3. LAYOUT 2 KOLOM! ============ */}
+      {/* ============ LAYOUT FORMULIR & PREVIEW ============ */}
       <div
         style={{
           display: "grid",
@@ -161,17 +146,16 @@ export default async function Ajukan({
           alignItems: "start",
         }}
       >
-        {/* KIRI: FORM! */}
         <form
           action={ajukanPinjam}
           style={{
-            background: "#1E103A",
-            border: "1px solid #4C1D95",
+            background: "#FFFFFF",
+            border: "1px solid rgba(221,160,221,0.4)",
             borderRadius: 24,
             padding: 20,
             display: "grid",
             gap: 14,
-            boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+            boxShadow: "0 10px 25px rgba(221,160,221,0.15)",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -180,7 +164,7 @@ export default async function Ajukan({
                 width: 44,
                 height: 44,
                 borderRadius: 13,
-                background: "linear-gradient(135deg,#F59E0B,#EC4899)",
+                background: "linear-gradient(135deg,#FFB6C1,#DDA0DD)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -190,17 +174,17 @@ export default async function Ajukan({
               📝
             </span>
             <div>
-              <b style={{ color: "white", fontSize: 17, display: "block" }}>
+              <b style={{ color: "#4A3B5C", fontSize: 17, display: "block" }}>
                 Formulir Peminjaman
               </b>
-              <span style={{ color: "#C4B5FD", fontSize: 12 }}>
-                Semua kolom bertanda * wajib diisi!
+              <span style={{ color: "#705888", fontSize: 12 }}>
+                Lengkapi data di bawah ini dengan benar
               </span>
             </div>
           </div>
 
-          <label style={{ color: "white", fontWeight: 800, fontSize: 13 }}>
-            🎬 Alat yang Dipinjam *
+          <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
+            🎬 Pilih Alat *
             <select
               name="alat_id"
               defaultValue={p.alat_id || ""}
@@ -210,9 +194,9 @@ export default async function Ajukan({
                 padding: 13,
                 borderRadius: 13,
                 marginTop: 6,
-                background: "#120826",
-                color: "white",
-                border: "1px solid #4C1D95",
+                background: "#FFF5F7",
+                color: "#4A3B5C",
+                border: "1px solid rgba(221,160,221,0.6)",
                 fontSize: 14,
               }}
             >
@@ -223,12 +207,9 @@ export default async function Ajukan({
                 </option>
               ))}
             </select>
-            <span style={{ color: "#A78BFA", fontSize: 11, fontWeight: 400 }}>
-              Pilih alat yang masih tersedia! Stok dihitung realtime!
-            </span>
           </label>
 
-          <label style={{ color: "white", fontWeight: 800, fontSize: 13 }}>
+          <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
             👤 Nama Peminjam *
             <input
               name="peminjam"
@@ -239,18 +220,15 @@ export default async function Ajukan({
                 padding: 13,
                 borderRadius: 13,
                 marginTop: 6,
-                background: "#120826",
-                color: "white",
-                border: "1px solid #4C1D95",
+                background: "#FFF5F7",
+                color: "#4A3B5C",
+                border: "1px solid rgba(221,160,221,0.6)",
                 fontSize: 14,
               }}
             />
-            <span style={{ color: "#A78BFA", fontSize: 11, fontWeight: 400 }}>
-              3-40 huruf, tanpa angka! Nama ini dipakai buat cek status!
-            </span>
           </label>
 
-          <label style={{ color: "white", fontWeight: 800, fontSize: 13 }}>
+          <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
             🏫 Kelas *
             <input
               name="kelas"
@@ -261,41 +239,35 @@ export default async function Ajukan({
                 padding: 13,
                 borderRadius: 13,
                 marginTop: 6,
-                background: "#120826",
-                color: "white",
-                border: "1px solid #4C1D95",
+                background: "#FFF5F7",
+                color: "#4A3B5C",
+                border: "1px solid rgba(221,160,221,0.6)",
                 fontSize: 14,
               }}
             />
-            <span style={{ color: "#A78BFA", fontSize: 11, fontWeight: 400 }}>
-              3-20 huruf! Contoh: 10 DKV 1, 11 DKV 2, 12 DKV 1
-            </span>
           </label>
 
-          <label style={{ color: "white", fontWeight: 800, fontSize: 13 }}>
+          <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
             🎯 Keperluan *
             <input
               name="keperluan"
               required
-              placeholder="Contoh: Foto produk untuk tugas akhir"
+              placeholder="Contoh: Tugas Akhir Fotografi"
               style={{
                 width: "100%",
                 padding: 13,
                 borderRadius: 13,
                 marginTop: 6,
-                background: "#120826",
-                color: "white",
-                border: "1px solid #4C1D95",
+                background: "#FFF5F7",
+                color: "#4A3B5C",
+                border: "1px solid rgba(221,160,221,0.6)",
                 fontSize: 14,
               }}
             />
-            <span style={{ color: "#A78BFA", fontSize: 11, fontWeight: 400 }}>
-              5-120 huruf! Jelaskan buat apa alat-nya!
-            </span>
           </label>
 
-          <label style={{ color: "white", fontWeight: 800, fontSize: 13 }}>
-            📦 Jumlah *
+          <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
+            📦 Jumlah Unit *
             <input
               name="jumlah"
               type="number"
@@ -308,21 +280,18 @@ export default async function Ajukan({
                 padding: 13,
                 borderRadius: 13,
                 marginTop: 6,
-                background: "#120826",
-                color: "white",
-                border: "1px solid #4C1D95",
+                background: "#FFF5F7",
+                color: "#4A3B5C",
+                border: "1px solid rgba(221,160,221,0.6)",
                 fontSize: 14,
               }}
             />
-            <span style={{ color: "#A78BFA", fontSize: 11, fontWeight: 400 }}>
-              1-5 unit! Kalau minta lebih dari stok, ditolak!
-            </span>
           </label>
 
           <div
             style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
           >
-            <label style={{ color: "white", fontWeight: 800, fontSize: 13 }}>
+            <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
               📅 Tanggal Pinjam *
               <input
                 name="tgl_pinjam"
@@ -333,14 +302,14 @@ export default async function Ajukan({
                   padding: 13,
                   borderRadius: 13,
                   marginTop: 6,
-                  background: "#120826",
-                  color: "white",
-                  border: "1px solid #4C1D95",
+                  background: "#FFF5F7",
+                  color: "#4A3B5C",
+                  border: "1px solid rgba(221,160,221,0.6)",
                   fontSize: 14,
                 }}
               />
             </label>
-            <label style={{ color: "white", fontWeight: 800, fontSize: 13 }}>
+            <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
               📅 Tanggal Kembali *
               <input
                 name="tgl_kembali"
@@ -351,238 +320,83 @@ export default async function Ajukan({
                   padding: 13,
                   borderRadius: 13,
                   marginTop: 6,
-                  background: "#120826",
-                  color: "white",
-                  border: "1px solid #4C1D95",
+                  background: "#FFF5F7",
+                  color: "#4A3B5C",
+                  border: "1px solid rgba(221,160,221,0.6)",
                   fontSize: 14,
                 }}
               />
             </label>
           </div>
-          <p
-            style={{
-              color: "#A78BFA",
-              fontSize: 11,
-              margin: "-6px 0 0",
-              lineHeight: 1.6,
-            }}
-          >
-            Maks 3 hari pinjam! Bukan Sabtu/Minggu! Maks 14 hari ke depan! Bukan
-            tanggal lampau!
-          </p>
 
           <button
             style={{
-              background: "linear-gradient(90deg,#F59E0B,#EC4899)",
-              color: "white",
+              background: "linear-gradient(90deg,#FFB6C1,#DDA0DD)",
+              color: "#4A3B5C",
               padding: 14,
               borderRadius: 999,
               fontWeight: 900,
               border: "none",
               cursor: "pointer",
               fontSize: 14,
-              boxShadow: "0 10px 30px rgba(236,72,153,0.4)",
+              boxShadow: "0 8px 20px rgba(255,182,193,0.4)",
             }}
           >
             Kirim Pengajuan →
           </button>
-
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Link
-              href="/alat"
-              style={{
-                flex: 1,
-                textAlign: "center",
-                background: "#120826",
-                border: "1px solid #4C1D95",
-                color: "white",
-                padding: "11px",
-                borderRadius: 999,
-                fontWeight: 800,
-                textDecoration: "none",
-                fontSize: 13,
-              }}
-            >
-              ← Lihat Alat
-            </Link>
-            <Link
-              href="/cek"
-              style={{
-                flex: 1,
-                textAlign: "center",
-                background: "white",
-                color: "#6D28D9",
-                padding: "11px",
-                borderRadius: 999,
-                fontWeight: 900,
-                textDecoration: "none",
-                fontSize: 13,
-              }}
-            >
-              🔍 Cek Status
-            </Link>
-          </div>
         </form>
 
-        {/* KANAN: PREVIEW ALAT + ATURAN! */}
-        <div style={{ display: "grid", gap: 14 }}>
+        {/* PREVIEW ALAT */}
+        <div>
           {alatDipilih ? (
             <div
               style={{
-                background: "linear-gradient(180deg,#2E1065,#1E103A)",
-                border: "1px solid #4C1D95",
+                background: "#FFFFFF",
+                border: "1px solid rgba(221,160,221,0.4)",
                 borderRadius: 24,
                 overflow: "hidden",
+                boxShadow: "0 10px 25px rgba(221,160,221,0.15)",
               }}
             >
-              <div style={{ position: "relative" }}>
-                <img
-                  src={gambarAlat(alatDipilih.kategori, alatDipilih.nama)}
-                  alt={alatDipilih.nama}
-                  style={{
-                    width: "100%",
-                    height: 170,
-                    objectFit: "cover",
-                    display: "block",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background:
-                      "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(18,8,38,0.85))",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-end",
-                    padding: "12px 14px",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 26,
-                      background: "rgba(0,0,0,0.45)",
-                      border: "1px solid rgba(255,255,255,0.4)",
-                      width: 46,
-                      height: 46,
-                      borderRadius: 13,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {iconAlat(alatDipilih.kategori, alatDipilih.nama)}
-                  </span>
-                  <span
-                    style={{
-                      background: "linear-gradient(135deg,#F472B6,#A855F7)",
-                      color: "white",
-                      fontSize: 11,
-                      fontWeight: 900,
-                      padding: "5px 10px",
-                      borderRadius: 999,
-                    }}
-                  >
-                    {alatDipilih.kategori.toUpperCase()}
-                  </span>
-                </div>
-              </div>
+              <img
+                src={gambarAlat(alatDipilih.kategori, alatDipilih.nama)}
+                alt={alatDipilih.nama}
+                style={{
+                  width: "100%",
+                  height: 170,
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
               <div style={{ padding: 16 }}>
-                <b style={{ color: "white", fontSize: 18, display: "block" }}>
+                <b style={{ color: "#4A3B5C", fontSize: 18, display: "block" }}>
                   {alatDipilih.nama}
                 </b>
-                <p
-                  style={{
-                    color: "#C4B5FD",
-                    fontSize: 12,
-                    margin: "6px 0 0",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {alatDipilih.keterangan || "Alat Lab DKV, siap dipakai!"}
+                <p style={{ color: "#705888", fontSize: 12, marginTop: 6 }}>
+                  {alatDipilih.keterangan || "Alat Lab DKV siap pakai."}
                 </p>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 8,
-                    marginTop: 12,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <span
-                    style={{
-                      background: "#120826",
-                      border: "1px solid #4C1D95",
-                      color: "white",
-                      fontSize: 12,
-                      fontWeight: 800,
-                      padding: "6px 10px",
-                      borderRadius: 999,
-                    }}
-                  >
-                    📦 Stok {alatDipilih.stok}
-                  </span>
-                  <span
-                    style={{
-                      background: tersediaDipilih > 0 ? "#14532D" : "#7F1D1D",
-                      color: tersediaDipilih > 0 ? "#BBF7D0" : "#FECACA",
-                      fontSize: 12,
-                      fontWeight: 900,
-                      padding: "6px 10px",
-                      borderRadius: 999,
-                    }}
-                  >
-                    ✅ Tersedia {tersediaDipilih} unit
-                  </span>
+                <div style={{ marginTop: 12, color: "#4A3B5C", fontSize: 13 }}>
+                  📦 Stok Total: <b>{alatDipilih.stok}</b> | Tersedia:{" "}
+                  <b>{tersediaDipilih}</b>
                 </div>
-                {tersediaDipilih <= 0 && (
-                  <div
-                    style={{
-                      background: "#7F1D1D",
-                      color: "white",
-                      padding: 10,
-                      borderRadius: 12,
-                      marginTop: 10,
-                      fontSize: 12,
-                      fontWeight: 700,
-                    }}
-                  >
-                    ⛔ Stok habis! Pilih alat lain ya!
-                  </div>
-                )}
               </div>
             </div>
           ) : (
             <div
               style={{
-                background: "#1E103A",
-                border: "1px solid #4C1D95",
+                background: "#FFFFFF",
+                border: "1px solid rgba(221,160,221,0.4)",
                 borderRadius: 24,
                 padding: 20,
                 textAlign: "center",
+                color: "#5B4B6E",
               }}
             >
-              <div style={{ fontSize: 40 }}>🎬</div>
-              <b style={{ color: "white", fontSize: 16 }}>Belum Pilih Alat?</b>
-              <p style={{ color: "#C4B5FD", fontSize: 13, margin: "6px 0 0" }}>
-                Pilih alat di form sebelah kiri atau lihat daftar alat.
+              <div style={{ fontSize: 40 }}>🌸</div>
+              <b style={{ fontSize: 16 }}>Belum Memilih Alat</b>
+              <p style={{ fontSize: 13, color: "#705888" }}>
+                Silakan pilih alat pada formulir di sebelah kiri.
               </p>
-              <Link
-                href="/alat"
-                style={{
-                  display: "inline-block",
-                  marginTop: 12,
-                  background: "linear-gradient(90deg,#F59E0B,#EC4899)",
-                  color: "white",
-                  padding: "11px 20px",
-                  borderRadius: 999,
-                  fontWeight: 900,
-                  textDecoration: "none",
-                  fontSize: 13,
-                }}
-              >
-                🎬 Lihat Semua Alat →
-              </Link>
             </div>
           )}
         </div>

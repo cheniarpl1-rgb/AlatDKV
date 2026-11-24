@@ -1,4 +1,4 @@
-// app/layout.tsx - Layout AlatDKV - Tema Feminim Pastel
+// app/layout.tsx - AlatDKV - Full Feminim Pastel & Modern
 import "./globals.css";
 import Link from "next/link";
 
@@ -12,15 +12,16 @@ export default function RootLayout({
       <body
         style={{
           margin: 0,
-          background: "#FFF5F7", // Latar belakang putih pink pastel yang lembut
-          color: "#4A3B5C", // Warna teks utama ungu gelap lembut yang ramah di mata
+          background:
+            "linear-gradient(135deg, #FFF0F5 0%, #F5EEF8 50%, #EBF5FB 100%)", // Gradasi Pastel Lembut (Pink, Lavender, Mint)
+          color: "#4A3B5C",
           fontFamily: "system-ui, -apple-system, sans-serif",
           minHeight: "100vh",
           position: "relative",
           overflowX: "hidden",
         }}
       >
-        {/* ============ BACKGROUND BOLA-BOLA PASTEL BLUR! ============ */}
+        {/* ============ BLUR BACKGROUND ORBS ============ */}
         <div
           style={{
             position: "fixed",
@@ -33,97 +34,96 @@ export default function RootLayout({
           <div
             style={{
               position: "absolute",
-              top: -80,
-              left: -60,
-              width: 320,
-              height: 320,
+              top: -100,
+              left: -100,
+              width: 400,
+              height: 400,
               borderRadius: "50%",
               background:
-                "radial-gradient(circle, rgba(255,182,193,0.4), transparent 70%)", // Soft Pink Pastel
-              filter: "blur(50px)",
+                "radial-gradient(circle, rgba(255,182,193,0.5), transparent 70%)",
+              filter: "blur(60px)",
             }}
           />
           <div
             style={{
               position: "absolute",
-              top: 200,
-              right: -80,
-              width: 360,
-              height: 360,
+              top: "40%",
+              right: -100,
+              width: 450,
+              height: 450,
               borderRadius: "50%",
               background:
-                "radial-gradient(circle, rgba(221,160,221,0.4), transparent 70%)", // Lavender Pastel
-              filter: "blur(50px)",
+                "radial-gradient(circle, rgba(221,160,221,0.45), transparent 70%)",
+              filter: "blur(60px)",
             }}
           />
           <div
             style={{
               position: "absolute",
               bottom: -100,
-              left: "30%",
-              width: 400,
-              height: 400,
+              left: "20%",
+              width: 500,
+              height: 500,
               borderRadius: "50%",
               background:
-                "radial-gradient(circle, rgba(255,218,185,0.4), transparent 70%)", // Peach Pastel
-              filter: "blur(50px)",
+                "radial-gradient(circle, rgba(175,238,238,0.4), transparent 70%)",
+              filter: "blur(60px)",
             }}
           />
         </div>
 
-        {/* ============ NAVBAR KACA PASTEL! ============ */}
+        {/* ============ NAVBAR MODERN PASTEL GLASS ============ */}
         <header
           style={{
             position: "sticky",
             top: 0,
             zIndex: 50,
-            background: "rgba(255, 245, 247, 0.85)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            borderBottom: "1px solid rgba(219, 112, 147, 0.2)",
-            boxShadow: "0 10px 30px rgba(219,112,147,0.08)",
+            background: "rgba(255, 250, 252, 0.8)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            borderBottom: "1px solid rgba(221, 160, 221, 0.3)",
+            boxShadow: "0 10px 30px rgba(221,160,221,0.15)",
           }}
         >
           <div
             style={{
-              height: 3,
+              height: 4,
               background:
-                "linear-gradient(90deg,#FFB6C1,#DDA0DD,#FFDAB9,#98FB98)",
+                "linear-gradient(90deg,#FFB6C1,#DDA0DD,#FFDAB9,#AFEEEE,#98FB98)",
             }}
           />
           <nav
             style={{
               maxWidth: 1100,
               margin: "0 auto",
-              padding: "12px 16px",
+              padding: "14px 20px",
               display: "flex",
-              gap: 10,
+              gap: 12,
               alignItems: "center",
               flexWrap: "wrap",
             }}
           >
-            {/* LOGO! */}
             <Link
               href="/"
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 10,
+                gap: 12,
                 textDecoration: "none",
               }}
             >
               <span
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 14,
+                  width: 48,
+                  height: 48,
+                  borderRadius: 16,
                   background: "linear-gradient(135deg,#FFB6C1,#DDA0DD,#FFDAB9)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 22,
-                  boxShadow: "0 8px 20px rgba(221,160,221,0.4)",
-                  border: "1px solid rgba(255,255,255,0.8)",
+                  fontSize: 24,
+                  boxShadow: "0 8px 25px rgba(221,160,221,0.5)",
+                  border: "2px solid rgba(255,255,255,0.9)",
                 }}
               >
                 🌸
@@ -132,13 +132,13 @@ export default function RootLayout({
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  lineHeight: 1,
+                  lineHeight: 1.1,
                 }}
               >
                 <span
                   style={{
                     fontWeight: 900,
-                    fontSize: 20,
+                    fontSize: 22,
                     background:
                       "linear-gradient(90deg,#DB7093,#9370DB,#8A2BE2)",
                     WebkitBackgroundClip: "text",
@@ -149,99 +149,63 @@ export default function RootLayout({
                 </span>
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 11,
                     fontWeight: 800,
                     color: "#9370DB",
-                    letterSpacing: 1,
+                    letterSpacing: 1.2,
                   }}
                 >
-                  LAB DKV • PASTEL EDITION
+                  PASTEL EDITION ✨
                 </span>
               </span>
             </Link>
 
-            {/* MENU! */}
             <div
               style={{
                 display: "flex",
-                gap: 6,
+                gap: 8,
                 flexWrap: "wrap",
                 marginLeft: "auto",
                 alignItems: "center",
               }}
             >
-              <Link
-                href="/"
-                style={{
-                  color: "#5B4B6E",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontSize: 13,
-                  padding: "9px 14px",
-                  borderRadius: 999,
-                  background: "rgba(221,160,221,0.15)",
-                  border: "1px solid rgba(221,160,221,0.3)",
-                }}
-              >
-                🏠 Beranda
-              </Link>
-              <Link
-                href="/alat"
-                style={{
-                  color: "#5B4B6E",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontSize: 13,
-                  padding: "9px 14px",
-                  borderRadius: 999,
-                  background: "rgba(221,160,221,0.15)",
-                  border: "1px solid rgba(221,160,221,0.3)",
-                }}
-              >
-                🎬 Alat
-              </Link>
-              <Link
-                href="/ajukan"
-                style={{
-                  color: "#5B4B6E",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontSize: 13,
-                  padding: "9px 14px",
-                  borderRadius: 999,
-                  background: "rgba(221,160,221,0.15)",
-                  border: "1px solid rgba(221,160,221,0.3)",
-                }}
-              >
-                📝 Ajukan
-              </Link>
-              <Link
-                href="/cek"
-                style={{
-                  color: "#5B4B6E",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontSize: 13,
-                  padding: "9px 14px",
-                  borderRadius: 999,
-                  background: "rgba(221,160,221,0.15)",
-                  border: "1px solid rgba(221,160,221,0.3)",
-                }}
-              >
-                🔍 Cek Status
-              </Link>
+              {[
+                ["🏠 Beranda", "/"],
+                ["🎬 Alat", "/alat"],
+                ["📝 Ajukan", "/ajukan"],
+                ["🔍 Cek Status", "/cek"],
+              ].map(([teks, href]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  style={{
+                    color: "#5B4B6E",
+                    textDecoration: "none",
+                    fontWeight: 800,
+                    fontSize: 13,
+                    padding: "10px 18px",
+                    borderRadius: 999,
+                    background: "rgba(255,255,255,0.7)",
+                    border: "1px solid rgba(221,160,221,0.4)",
+                    boxShadow: "0 4px 15px rgba(221,160,221,0.1)",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {teks}
+                </Link>
+              ))}
               <Link
                 href="/admin"
                 style={{
                   background: "linear-gradient(90deg,#FFB6C1,#DDA0DD)",
                   color: "#4A3B5C",
-                  padding: "9px 16px",
+                  padding: "10px 20px",
                   borderRadius: 999,
                   fontWeight: 900,
                   textDecoration: "none",
                   fontSize: 13,
-                  boxShadow: "0 8px 20px rgba(255,182,193,0.4)",
-                  border: "1px solid rgba(255,255,255,0.6)",
+                  boxShadow: "0 8px 25px rgba(255,182,193,0.5)",
+                  border: "2px solid rgba(255,255,255,0.8)",
                 }}
               >
                 🛠 Admin →
@@ -250,12 +214,12 @@ export default function RootLayout({
           </nav>
         </header>
 
-        {/* ============ ISI HALAMAN ============ */}
+        {/* ============ MAIN CONTENT ============ */}
         <main
           style={{
             maxWidth: 1100,
             margin: "0 auto",
-            padding: "18px 16px 40px",
+            padding: "24px 20px 50px",
           }}
         >
           {children}
@@ -264,25 +228,17 @@ export default function RootLayout({
         {/* ============ FOOTER PASTEL ============ */}
         <footer
           style={{
-            background: "linear-gradient(180deg,#FFE4E1,#FFF0F5)",
+            background: "rgba(255, 240, 245, 0.9)",
             borderTop: "1px solid rgba(221,160,221,0.3)",
-            marginTop: 20,
-            color: "#5B4B6E",
+            padding: "24px 20px",
+            textAlign: "center",
+            color: "#705888",
+            fontSize: 13,
+            fontWeight: 700,
+            marginTop: 30,
           }}
         >
-          <div
-            style={{
-              maxWidth: 1100,
-              margin: "0 auto",
-              padding: "28px 16px 16px",
-              textAlign: "center",
-              fontSize: 13,
-            }}
-          >
-            <p style={{ margin: 0, fontWeight: 700 }}>
-              AlatDKV • Lab Desain Komunikasi Visual • Edisi Feminim Pastel ✨
-            </p>
-          </div>
+          AlatDKV • Lab Desain Komunikasi Visual • Edisi Feminim Pastel 🌸
         </footer>
       </body>
     </html>

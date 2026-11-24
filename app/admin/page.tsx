@@ -1,9 +1,4 @@
-// app/admin/page.tsx - Admin AlatDKV - JUARA 1 DUNIA!
-// Colorful, anti-white 100%, sangat modern, sangat memukau,
-// tata letak sangat rapi, kayak website yang pernah Juara 1 dunia!
-// SESUAI SOAL E2: Daftar permohonan, saring status, terlambat, setujui/tolak/kembalikan!
-// FIX Next.js 16: Hapus `dynamic`, ganti `connection()`!
-
+// app/admin/page.tsx - Admin AlatDKV - Tema Feminim Pastel
 import { supabaseRahasia } from "@/lib/supabase";
 import { tglIndo } from "@/lib/validasi";
 import { setujui, tolak, kembalikan } from "./actions";
@@ -17,13 +12,11 @@ export default async function Admin({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  // 👈 PENGGANTI `force-dynamic` DI NEXT.JS 16! WAJIB ADA!
   await connection();
 
   const p = await searchParams;
   const filter = p.status || "Semua";
 
-  // Ambil SEMUA buat hitung statistik!
   const { data: semua } = await supabaseRahasia()
     .from("peminjaman_alat")
     .select("*, alat(nama,kategori)")
@@ -40,7 +33,6 @@ export default async function Admin({
     return Math.ceil((b - a) / (1000 * 60 * 60 * 24));
   };
 
-  // Statistik!
   const total = all.length;
   const jmlMenunggu = all.filter((x: any) => x.status === "menunggu").length;
   const jmlDipinjam = all.filter((x: any) => x.status === "dipinjam").length;
@@ -48,25 +40,23 @@ export default async function Admin({
   const jmlKembali = all.filter((x: any) => x.status === "dikembalikan").length;
   const jmlTolak = all.filter((x: any) => x.status === "ditolak").length;
 
-  // Filter list!
   let list = all;
   if (filter === "terlambat") list = all.filter(isTerlambat);
   else if (filter !== "Semua")
     list = all.filter((x: any) => x.status === filter);
 
-  // Warna badge status!
   const badgeStatus = (status: string, terlambat: boolean) => {
     if (terlambat)
-      return { bg: "#7F1D1D", color: "#FECACA", label: "⚠ TERLAMBAT!" };
+      return { bg: "#FADBD8", color: "#78281F", label: "⚠ TERLAMBAT!" };
     if (status === "menunggu")
-      return { bg: "#78350F", color: "#FDE68A", label: "⏳ MENUNGGU" };
+      return { bg: "#FCF3CF", color: "#7D6608", label: "⏳ MENUNGGU" };
     if (status === "dipinjam")
-      return { bg: "#1E40AF", color: "#BFDBFE", label: "📦 DIPINJAM" };
+      return { bg: "#EBF5FB", color: "#1B4F72", label: "📦 DIPINJAM" };
     if (status === "dikembalikan")
-      return { bg: "#14532D", color: "#BBF7D0", label: "✅ DIKEMBALIKAN" };
+      return { bg: "#E8F8F5", color: "#117A65", label: "✅ DIKEMBALIKAN" };
     if (status === "ditolak")
-      return { bg: "#7F1D1D", color: "#FECACA", label: "❌ DITOLAK" };
-    return { bg: "#374151", color: "white", label: status.toUpperCase() };
+      return { bg: "#FADBD8", color: "#78281F", label: "❌ DITOLAK" };
+    return { bg: "#F2F4F4", color: "#2C3E50", label: status.toUpperCase() };
   };
 
   const filters = [
@@ -74,43 +64,43 @@ export default async function Admin({
       key: "Semua",
       label: "📋 Semua",
       count: total,
-      activeBg: "linear-gradient(90deg,#F59E0B,#EC4899)",
+      activeBg: "linear-gradient(90deg,#FFB6C1,#DDA0DD)",
     },
     {
       key: "menunggu",
       label: "⏳ Menunggu",
       count: jmlMenunggu,
-      activeBg: "linear-gradient(90deg,#F59E0B,#F97316)",
+      activeBg: "linear-gradient(90deg,#FFDAB9,#FFE4B5)",
     },
     {
       key: "dipinjam",
       label: "📦 Dipinjam",
       count: jmlDipinjam,
-      activeBg: "linear-gradient(90deg,#3B82F6,#22D3EE)",
+      activeBg: "linear-gradient(90deg,#AFEEEE,#98FB98)",
     },
     {
       key: "dikembalikan",
       label: "✅ Dikembalikan",
       count: jmlKembali,
-      activeBg: "linear-gradient(90deg,#10B981,#22D3EE)",
+      activeBg: "linear-gradient(135deg,#98FB98,#AFEEEE)",
     },
     {
       key: "ditolak",
       label: "❌ Ditolak",
       count: jmlTolak,
-      activeBg: "linear-gradient(90deg,#EF4444,#F97316)",
+      activeBg: "linear-gradient(135deg,#FFC0CB,#FFB6C1)",
     },
     {
       key: "terlambat",
       label: "⚠ Terlambat",
       count: jmlTerlambat,
-      activeBg: "linear-gradient(90deg,#DC2626,#F97316)",
+      activeBg: "linear-gradient(135deg,#F5B7B1,#FADBD8)",
     },
   ];
 
   return (
     <div>
-      {/* ============ 1. HEADER ADMIN! 👈 UPGRADE! ============ */}
+      {/* ============ HEADER ADMIN PASTEL ============ */}
       <div
         style={{
           display: "flex",
@@ -123,19 +113,19 @@ export default async function Admin({
         <div>
           <span
             style={{
-              background: "white",
-              color: "#6D28D9",
+              background: "#FFB6C1",
+              color: "#4A3B5C",
               fontSize: 11,
               fontWeight: 900,
               padding: "6px 12px",
               borderRadius: 999,
             }}
           >
-            🛠 DASHBOARD ADMIN • LAB DKV
+            🌸 DASHBOARD ADMIN • LAB DKV
           </span>
           <h1
             style={{
-              color: "white",
+              color: "#4A3B5C",
               fontSize: 32,
               fontWeight: 900,
               margin: "10px 0 0",
@@ -145,7 +135,7 @@ export default async function Admin({
             Admin AlatDKV
             <span
               style={{
-                background: "linear-gradient(90deg,#FDE68A,#F472B6,#A78BFA)",
+                background: "linear-gradient(90deg,#DB7093,#9370DB)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}
@@ -154,14 +144,14 @@ export default async function Admin({
               ({list.length})
             </span>
           </h1>
-          <p style={{ color: "#C4B5FD", fontSize: 13, margin: "6px 0 0" }}>
+          <p style={{ color: "#705888", fontSize: 13, margin: "6px 0 0" }}>
             {filter === "Semua"
-              ? "Semua permohonan, dari yang terbaru!"
-              : `Filter: ${filter.toUpperCase()} • ${list.length} permohonan!`}
+              ? "Semua permohonan peminjaman alat."
+              : `Filter: ${filter.toUpperCase()} • ${list.length} permohonan`}
             {jmlTerlambat > 0 && (
-              <b style={{ color: "#FCA5A5" }}>
+              <b style={{ color: "#C0392B" }}>
                 {" "}
-                - ⚠ Ada {jmlTerlambat} terlambat, segera tindak lanjuti!
+                - ⚠ Ada {jmlTerlambat} terlambat!
               </b>
             )}
           </p>
@@ -170,13 +160,14 @@ export default async function Admin({
           <Link
             href="/admin/alat"
             style={{
-              background: "white",
-              color: "#6D28D9",
+              background: "linear-gradient(90deg,#FFB6C1,#DDA0DD)",
+              color: "#4A3B5C",
               padding: "11px 18px",
               borderRadius: 999,
               fontWeight: 900,
               textDecoration: "none",
               fontSize: 13,
+              boxShadow: "0 8px 20px rgba(255,182,193,0.4)",
             }}
           >
             + Kelola Alat →
@@ -184,9 +175,9 @@ export default async function Admin({
           <Link
             href="/"
             style={{
-              background: "#1E103A",
-              border: "1px solid #4C1D95",
-              color: "white",
+              background: "#FFF5F7",
+              border: "1px solid rgba(221,160,221,0.5)",
+              color: "#5B4B6E",
               padding: "11px 18px",
               borderRadius: 999,
               fontWeight: 800,
@@ -199,12 +190,12 @@ export default async function Admin({
           <form action={logoutAdmin}>
             <button
               style={{
-                background: "#7F1D1D",
-                color: "white",
+                background: "#FADBD8",
+                color: "#78281F",
                 padding: "11px 18px",
                 borderRadius: 999,
                 fontWeight: 900,
-                border: "none",
+                border: "1px solid #F5B7B1",
                 cursor: "pointer",
                 fontSize: 13,
               }}
@@ -215,7 +206,7 @@ export default async function Admin({
         </div>
       </div>
 
-      {/* ============ 2. 4 KARTU STATISTIK! 👈 BARU! ============ */}
+      {/* ============ 4 KARTU STATISTIK PASTEL ============ */}
       <div
         style={{
           display: "grid",
@@ -229,29 +220,29 @@ export default async function Admin({
             "📋",
             "Total Permohonan",
             total,
-            "linear-gradient(135deg,#7C3AED,#A855F7)",
-            "Semua yang pernah masuk!",
+            "linear-gradient(135deg,#FFB6C1,#FFC0CB)",
+            "Semua riwayat",
           ],
           [
             "⏳",
             "Menunggu",
             jmlMenunggu,
-            "linear-gradient(135deg,#F59E0B,#F97316)",
-            "Butuh disetujui / ditolak!",
+            "linear-gradient(135deg,#FFDAB9,#FFE4B5)",
+            "Perlu ditinjau",
           ],
           [
             "📦",
-            "Sedang Dipinjam",
+            "Dipinjam",
             jmlDipinjam,
-            "linear-gradient(135deg,#3B82F6,#22D3EE)",
-            "Alat lagi di luar lab!",
+            "linear-gradient(135deg,#AFEEEE,#98FB98)",
+            "Alat di luar lab",
           ],
           [
             "⚠",
-            "Terlambat!",
+            "Terlambat",
             jmlTerlambat,
-            "linear-gradient(135deg,#DC2626,#F97316)",
-            "Lewat tanggal kembali!",
+            "linear-gradient(135deg,#F5B7B1,#FADBD8)",
+            "Lewat tenggat",
           ],
         ].map(([icon, label, nilai, bg, desc]) => (
           <div
@@ -260,8 +251,9 @@ export default async function Admin({
               background: bg as string,
               borderRadius: 20,
               padding: 16,
-              color: "white",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.25)",
+              color: "#4A3B5C",
+              boxShadow: "0 10px 25px rgba(221,160,221,0.2)",
+              border: "1px solid rgba(255,255,255,0.6)",
             }}
           >
             <div
@@ -277,23 +269,23 @@ export default async function Admin({
             <b style={{ fontSize: 14, display: "block", marginTop: 8 }}>
               {label}
             </b>
-            <div style={{ fontSize: 11, opacity: 0.9, marginTop: 2 }}>
+            <div style={{ fontSize: 11, opacity: 0.85, marginTop: 2 }}>
               {desc}
             </div>
           </div>
         ))}
       </div>
 
-      {/* ============ 3. KOTAK TERLAMBAT GEDE! 👈 BARU! WAJIB DI SOAL! ============ */}
+      {/* ============ KOTAK TERLAMBAT ============ */}
       {jmlTerlambat > 0 && filter !== "terlambat" && (
         <Link
           href="/admin?status=terlambat"
           style={{
             display: "block",
             marginTop: 14,
-            background: "#7F1D1D",
-            border: "2px solid #EF4444",
-            color: "white",
+            background: "#FADBD8",
+            border: "2px solid #F5B7B1",
+            color: "#78281F",
             padding: 16,
             borderRadius: 20,
             textDecoration: "none",
@@ -302,30 +294,26 @@ export default async function Admin({
           <b style={{ fontSize: 15 }}>
             ⚠ ADA {jmlTerlambat} PEMINJAMAN TERLAMBAT! KLIK DI SINI →
           </b>
-          <p style={{ margin: "4px 0 0", fontSize: 13, opacity: 0.9 }}>
-            Ada yang belum kembalikan padahal udah lewat tanggal kembali! Segera
-            hubungi peminjam-nya!
-          </p>
         </Link>
       )}
 
-      {/* ============ 4. FILTER TOMBOL WARNA + ANGKA! 👈 UPGRADE! ============ */}
+      {/* ============ TOMBOL FILTER ============ */}
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 16 }}>
         {filters.map((f) => (
           <Link
             key={f.key}
             href={f.key === "Semua" ? "/admin" : `/admin?status=${f.key}`}
             style={{
-              background: filter === f.key ? f.activeBg : "#1E103A",
-              color: "white",
+              background: filter === f.key ? f.activeBg : "#FFFFFF",
+              color: "#4A3B5C",
               padding: "10px 16px",
               borderRadius: 999,
               fontWeight: 800,
               textDecoration: "none",
               fontSize: 13,
-              border: "1px solid #4C1D95",
+              border: "1px solid rgba(221,160,221,0.5)",
               boxShadow:
-                filter === f.key ? "0 5px 20px rgba(236,72,153,0.3)" : "none",
+                filter === f.key ? "0 4px 15px rgba(221,160,221,0.4)" : "none",
             }}
           >
             {f.label} ({f.count})
@@ -333,41 +321,24 @@ export default async function Admin({
         ))}
       </div>
 
-      {/* ============ 5. LIST PEMINJAMAN! 👈 UPGRADE TOTAL! ============ */}
+      {/* ============ DAFTAR PERMOHONAN ============ */}
       {list.length === 0 ? (
         <div
           style={{
-            background: "#1E103A",
-            border: "1px solid #4C1D95",
+            background: "#FFFFFF",
+            border: "1px solid rgba(221,160,221,0.4)",
             borderRadius: 24,
             padding: 32,
             textAlign: "center",
             marginTop: 16,
+            color: "#5B4B6E",
           }}
         >
-          <div style={{ fontSize: 48 }}>🎉</div>
-          <b style={{ color: "white", fontSize: 18 }}>
-            Gak Ada Permohonan di Filter Ini!
-          </b>
-          <p style={{ color: "#C4B5FD", fontSize: 13, margin: "6px 0 0" }}>
-            Coba filter lain, atau tunggu ada siswa yang ajukan!
+          <div style={{ fontSize: 48 }}>🌸</div>
+          <b style={{ fontSize: 18 }}>Tidak Ada Permohonan</b>
+          <p style={{ fontSize: 13, marginTop: 4 }}>
+            Belum ada data pada filter ini.
           </p>
-          <Link
-            href="/admin"
-            style={{
-              display: "inline-block",
-              marginTop: 12,
-              background: "linear-gradient(90deg,#F59E0B,#EC4899)",
-              color: "white",
-              padding: "11px 20px",
-              borderRadius: 999,
-              fontWeight: 900,
-              textDecoration: "none",
-              fontSize: 13,
-            }}
-          >
-            Lihat Semua →
-          </Link>
         </div>
       ) : (
         <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
@@ -379,16 +350,18 @@ export default async function Admin({
               <div
                 key={x.id}
                 style={{
-                  background: "#1E103A",
-                  border: terlambat ? "2px solid #EF4444" : "1px solid #4C1D95",
+                  background: "#FFFFFF",
+                  border: terlambat
+                    ? "2px solid #F5B7B1"
+                    : "1px solid rgba(221,160,221,0.4)",
                   borderRadius: 20,
                   padding: 16,
                   display: "grid",
                   gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
                   gap: 14,
+                  boxShadow: "0 10px 25px rgba(221,160,221,0.15)",
                 }}
               >
-                {/* KIRI: FOTO + DETAIL! */}
                 <div style={{ display: "flex", gap: 12 }}>
                   <img
                     src={gambarAlat(
@@ -402,10 +375,10 @@ export default async function Admin({
                       objectFit: "cover",
                       borderRadius: 16,
                       flexShrink: 0,
-                      border: "1px solid #4C1D95",
+                      border: "1px solid rgba(221,160,221,0.5)",
                     }}
                   />
-                  <div style={{ minWidth: 0 }}>
+                  <div style={{ minWidth: 0, color: "#4A3B5C" }}>
                     <div
                       style={{
                         display: "flex",
@@ -414,7 +387,7 @@ export default async function Admin({
                         alignItems: "center",
                       }}
                     >
-                      <b style={{ color: "white", fontSize: 15 }}>
+                      <b style={{ fontSize: 15 }}>
                         #{x.id} •{" "}
                         {iconAlat(x.alat?.kategori || "", x.alat?.nama || "")}{" "}
                         {x.alat?.nama}
@@ -434,54 +407,22 @@ export default async function Admin({
                     </div>
                     <div
                       style={{
-                        color: "#C4B5FD",
+                        color: "#705888",
                         fontSize: 13,
                         marginTop: 6,
                         lineHeight: 1.6,
                       }}
                     >
-                      👤 <b style={{ color: "white" }}>{x.peminjam}</b> • 🏫{" "}
-                      {x.kelas} • 📦{" "}
-                      <b style={{ color: "white" }}>{x.jumlah} unit</b>
+                      👤 <b>{x.peminjam}</b> • 🏫 {x.kelas} • 📦{" "}
+                      <b>{x.jumlah} unit</b>
                       <br />
                       📅 {tglIndo(x.tgl_pinjam)} → {tglIndo(x.tgl_kembali)}
                       <br />
                       🎯 {x.keperluan}
                     </div>
-                    {x.status === "ditolak" && (
-                      <div
-                        style={{
-                          background: "#7F1D1D",
-                          color: "#FECACA",
-                          padding: 8,
-                          borderRadius: 10,
-                          marginTop: 8,
-                          fontSize: 12,
-                          fontWeight: 700,
-                        }}
-                      >
-                        ❌ Alasan Ditolak: {x.alasan_tolak}
-                      </div>
-                    )}
-                    {x.status === "dikembalikan" && x.kondisi_kembali && (
-                      <div
-                        style={{
-                          background: "#14532D",
-                          color: "#BBF7D0",
-                          padding: 8,
-                          borderRadius: 10,
-                          marginTop: 8,
-                          fontSize: 12,
-                          fontWeight: 700,
-                        }}
-                      >
-                        ✅ Dikembalikan • Kondisi: {x.kondisi_kembali}
-                      </div>
-                    )}
                   </div>
                 </div>
 
-                {/* KANAN: TERLAMBAT + TOMBOL AKSI! */}
                 <div
                   style={{
                     display: "flex",
@@ -493,17 +434,16 @@ export default async function Admin({
                   {terlambat && (
                     <div
                       style={{
-                        background: "#7F1D1D",
-                        border: "1px solid #EF4444",
-                        color: "white",
+                        background: "#FADBD8",
+                        border: "1px solid #F5B7B1",
+                        color: "#78281F",
                         padding: 10,
                         borderRadius: 12,
                         fontWeight: 900,
                         fontSize: 12,
                       }}
                     >
-                      ⚠ TERLAMBAT {hariTelat} HARI! Harusnya kembali{" "}
-                      {tglIndo(x.tgl_kembali)}!
+                      ⚠ TERLAMBAT {hariTelat} HARI!
                     </div>
                   )}
                   {x.status === "menunggu" && (
@@ -513,8 +453,8 @@ export default async function Admin({
                         <button
                           style={{
                             width: "100%",
-                            background: "#16A34A",
-                            color: "white",
+                            background: "#A3E4D7",
+                            color: "#0E6655",
                             padding: "12px",
                             borderRadius: 999,
                             fontWeight: 900,
@@ -523,29 +463,29 @@ export default async function Admin({
                             fontSize: 13,
                           }}
                         >
-                          ✅ Serahkan Alat Ini
+                          ✅ Setujui & Serahkan
                         </button>
                       </form>
                       <form action={tolak} style={{ display: "flex", gap: 6 }}>
                         <input type="hidden" name="id" value={x.id} />
                         <input
                           name="alasan"
-                          placeholder="Alasan tolak (wajib!)"
+                          placeholder="Alasan tolak..."
                           required
                           style={{
                             flex: 1,
                             padding: 11,
                             borderRadius: 999,
-                            background: "#120826",
-                            color: "white",
-                            border: "1px solid #4C1D95",
+                            background: "#FFF5F7",
+                            color: "#4A3B5C",
+                            border: "1px solid rgba(221,160,221,0.6)",
                             fontSize: 13,
                           }}
                         />
                         <button
                           style={{
-                            background: "#DC2626",
-                            color: "white",
+                            background: "#F5B7B1",
+                            color: "#78281F",
                             padding: "11px 16px",
                             borderRadius: 999,
                             fontWeight: 900,
@@ -572,21 +512,21 @@ export default async function Admin({
                           flex: 1,
                           padding: 11,
                           borderRadius: 999,
-                          background: "#120826",
-                          color: "white",
-                          border: "1px solid #4C1D95",
+                          background: "#FFF5F7",
+                          color: "#4A3B5C",
+                          border: "1px solid rgba(221,160,221,0.6)",
                           fontSize: 13,
                         }}
                       >
-                        <option value="">-- Kondisi Kembali --</option>
+                        <option value="">-- Kondisi --</option>
                         <option value="baik">✅ Baik</option>
                         <option value="rusak ringan">⚠ Rusak Ringan</option>
                         <option value="rusak berat">❌ Rusak Berat</option>
                       </select>
                       <button
                         style={{
-                          background: "linear-gradient(90deg,#F59E0B,#EC4899)",
-                          color: "white",
+                          background: "linear-gradient(90deg,#FFB6C1,#DDA0DD)",
+                          color: "#4A3B5C",
                           padding: "11px 16px",
                           borderRadius: 999,
                           fontWeight: 900,
@@ -598,23 +538,6 @@ export default async function Admin({
                         📦 Kembalikan
                       </button>
                     </form>
-                  )}
-                  {(x.status === "dikembalikan" || x.status === "ditolak") && (
-                    <div
-                      style={{
-                        background: "#120826",
-                        border: "1px solid #4C1D95",
-                        color: "#A78BFA",
-                        padding: 10,
-                        borderRadius: 12,
-                        fontSize: 12,
-                        textAlign: "center",
-                      }}
-                    >
-                      {x.status === "dikembalikan"
-                        ? "✅ Selesai! Gak ada aksi lagi."
-                        : "❌ Ditolak! Gak ada aksi lagi."}
-                    </div>
                   )}
                 </div>
               </div>

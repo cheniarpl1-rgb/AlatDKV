@@ -1,4 +1,4 @@
-/* app/globals.css - AlatDKV - Anti-White 100%! */
+/* app/globals.css - AlatDKV - Feminim Pastel Theme */
 * {
   box-sizing: border-box;
 }
@@ -8,8 +8,18 @@ html {
 }
 
 body {
-  background: #120826 !important;
-  color: white;
+  background: linear-gradient(
+    135deg,
+    #fff0f5 0%,
+    #f5eef8 50%,
+    #ebf5fb 100%
+  ) !important;
+  color: #4a3b5c !important;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  min-height: 100vh;
 }
 
 a {
@@ -40,19 +50,19 @@ textarea {
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #ec4899 !important;
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+  border-color: #db7093 !important;
+  box-shadow: 0 0 0 3px rgba(219, 112, 147, 0.2) !important;
 }
 
-/* Sembunyikan scrollbar di ticker / carousel biar rapi! */
+/* Scrollbar Pastel yang Mulus & Cantik! */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #120826;
+  background: #fff5f7;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #f59e0b, #ec4899, #8b5cf6);
+  background: linear-gradient(180deg, #ffb6c1, #dda0dd, #afeeee);
   border-radius: 999px;
 }
