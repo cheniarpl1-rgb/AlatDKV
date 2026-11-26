@@ -1,68 +1,38 @@
-/* app/globals.css - AlatDKV - Feminim Pastel Theme */
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
+/* GLOBALS - PASTEL NONJOL, MODERN */
 body {
-  background: linear-gradient(
-    135deg,
-    #fff0f5 0%,
-    #f5eef8 50%,
-    #ebf5fb 100%
-  ) !important;
-  color: #4a3b5c !important;
+  background:
+    radial-gradient(
+      900px 500px at 5% 0%,
+      #ffc9dd 0%,
+      rgba(255, 201, 221, 0) 60%
+    ),
+    radial-gradient(
+      900px 500px at 95% 10%,
+      #ffe9a8 0%,
+      rgba(255, 233, 168, 0) 60%
+    ),
+    radial-gradient(
+      900px 600px at 0% 45%,
+      #bdefff 0%,
+      rgba(189, 239, 255, 0) 60%
+    ),
+    radial-gradient(
+      900px 600px at 100% 55%,
+      #d5c6ff 0%,
+      rgba(213, 198, 255, 0) 60%
+    ),
+    radial-gradient(
+      900px 500px at 50% 100%,
+      #c6f6d5 0%,
+      rgba(198, 246, 213, 0) 55%
+    ),
+    linear-gradient(180deg, #fff1f5 0%, #fff7e0 35%, #eaf9ff 70%, #f3f0ff 100%) !important;
+  background-attachment: fixed !important;
+  color: #1e293b !important;
   font-family:
+    ui-rounded,
     system-ui,
     -apple-system,
+    "Segoe UI",
     sans-serif;
-  min-height: 100vh;
-}
-
-a {
-  color: inherit;
-  transition: all 0.2s ease;
-}
-
-a:hover {
-  opacity: 0.85;
-  transform: translateY(-1px);
-}
-
-button {
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-input,
-select,
-textarea {
-  outline: none;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: #db7093 !important;
-  box-shadow: 0 0 0 3px rgba(219, 112, 147, 0.2) !important;
-}
-
-/* Scrollbar Pastel yang Mulus & Cantik! */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #fff5f7;
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ffb6c1, #dda0dd, #afeeee);
-  border-radius: 999px;
 }

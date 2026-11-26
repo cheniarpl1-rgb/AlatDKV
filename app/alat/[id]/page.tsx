@@ -1,6 +1,6 @@
-// app/alat/[id]/page.tsx - Detail Alat AlatDKV - JUARA 1 DUNIA!
-// Colorful, anti-white 100%, sangat modern, sangat memukau,
-// tata letak sangat rapi, kayak website yang pernah Juara 1 dunia!
+// app/alat/[id]/page.tsx - Detail Alat AlatDKV - GAYA EVENTKU TEMEN LO! JUARA 1 DUNIA!
+// Persis kayak screenshot: pastel pelangi, judul warna-warni outline navy,
+// kotak putih border navy! Colorful, anti-white, sangat modern, sangat memukau, sangat rapi!
 // SESUAI SOAL E2: Detail alat, tombol ajukan!
 // FIX Next.js 16: Hapus `dynamic`, ganti `connection()`!
 
@@ -24,7 +24,7 @@ export default async function DetailAlat({
     .eq("id", id)
     .single();
 
-  // 👈 KALAU ALAT GAK KETEMU, TAMPILIN 404 YANG CANTIK!
+  // 👈 KALAU ALAT GAK KETEMU, TAMPILIN 404 YANG CANTIK! JADI PUTIH!
   if (!a) {
     return (
       <div
@@ -36,10 +36,10 @@ export default async function DetailAlat({
         }}
       >
         <div style={{ fontSize: 64 }}>😢</div>
-        <h1 style={{ color: "white", fontSize: 28, fontWeight: 900 }}>
+        <h1 style={{ color: "#1A1443", fontSize: 28, fontWeight: 900 }}>
           Alat Tidak Ditemukan!
         </h1>
-        <p style={{ color: "#C4B5FD", fontSize: 13 }}>
+        <p style={{ color: "#64748B", fontSize: 13, fontWeight: 600 }}>
           Mungkin alat-nya sudah dihapus / ID-nya salah. Coba cari alat lain ya!
         </p>
         <div
@@ -54,7 +54,7 @@ export default async function DetailAlat({
           <Link
             href="/alat"
             style={{
-              background: "linear-gradient(90deg,#F59E0B,#EC4899)",
+              background: "#1A1443",
               color: "white",
               padding: "12px 24px",
               borderRadius: 999,
@@ -67,8 +67,9 @@ export default async function DetailAlat({
           <Link
             href="/"
             style={{
-              background: "white",
-              color: "#6D28D9",
+              background: "#FDE68A",
+              border: "2px solid #1A1443",
+              color: "#1A1443",
               padding: "12px 24px",
               borderRadius: 999,
               fontWeight: 900,
@@ -94,20 +95,22 @@ export default async function DetailAlat({
   );
   const tersedia = Math.max(0, a.stok - terpakai);
   const persen = a.stok > 0 ? Math.round((tersedia / a.stok) * 100) : 0;
-  const warnaBar =
-    persen > 50
-      ? "linear-gradient(90deg,#10B981,#22D3EE)"
-      : persen > 0
-        ? "linear-gradient(90deg,#F59E0B,#F97316)"
-        : "linear-gradient(90deg,#EF4444,#F97316)";
+  const warnaBar = persen > 50 ? "#34D399" : persen > 0 ? "#F59E0B" : "#EF4444";
 
-  // Warna per kategori!
+  // Warna per kategori! PASTEL!
   const warnaKat: Record<string, string> = {
-    kamera: "linear-gradient(135deg,#F472B6,#A855F7)",
-    pencahayaan: "linear-gradient(135deg,#FBBF24,#F97316)",
-    audio: "linear-gradient(135deg,#60A5FA,#22D3EE)",
-    tablet: "linear-gradient(135deg,#34D399,#10B981)",
-    aksesoris: "linear-gradient(135deg,#A78BFA,#EC4899)",
+    kamera: "#FCE7F3",
+    pencahayaan: "#FEF3C7",
+    audio: "#DBEAFE",
+    tablet: "#D1FAE5",
+    aksesoris: "#EDE9FE",
+  };
+  const warnaTeksKat: Record<string, string> = {
+    kamera: "#9D174D",
+    pencahayaan: "#92400E",
+    audio: "#1E40AF",
+    tablet: "#065F46",
+    aksesoris: "#5B21B6",
   };
 
   // Alat lain yang se-kategori! (Buat bagian bawah!)
@@ -122,29 +125,30 @@ export default async function DetailAlat({
 
   return (
     <div>
-      {/* ============ BREADCRUMB! 👈 BARU! ============ */}
+      {/* ============ BREADCRUMB! JADI NAVY! ============ */}
       <div
         style={{
           display: "flex",
           gap: 6,
           alignItems: "center",
           fontSize: 13,
-          color: "#A78BFA",
+          fontWeight: 600,
+          color: "#64748B",
           flexWrap: "wrap",
         }}
       >
-        <Link href="/" style={{ color: "#C4B5FD", textDecoration: "none" }}>
+        <Link href="/" style={{ color: "#475569", textDecoration: "none" }}>
           🏠 Beranda
         </Link>
         <span>›</span>
-        <Link href="/alat" style={{ color: "#C4B5FD", textDecoration: "none" }}>
+        <Link href="/alat" style={{ color: "#475569", textDecoration: "none" }}>
           🎬 Alat
         </Link>
         <span>›</span>
         <Link
           href={`/alat?kategori=${a.kategori}`}
           style={{
-            color: "#C4B5FD",
+            color: "#475569",
             textDecoration: "none",
             textTransform: "capitalize",
           }}
@@ -152,10 +156,10 @@ export default async function DetailAlat({
           {a.kategori}
         </Link>
         <span>›</span>
-        <b style={{ color: "white" }}>{a.nama}</b>
+        <b style={{ color: "#1A1443" }}>{a.nama}</b>
       </div>
 
-      {/* ============ LAYOUT 2 KOLOM! 👈 UPGRADE TOTAL! ============ */}
+      {/* ============ LAYOUT 2 KOLOM! JADI PUTIH! ============ */}
       <div
         style={{
           display: "grid",
@@ -171,8 +175,9 @@ export default async function DetailAlat({
               borderRadius: 28,
               overflow: "hidden",
               position: "relative",
-              border: "1px solid rgba(255,255,255,0.25)",
-              boxShadow: "0 20px 60px rgba(109,40,217,0.4)",
+              border: "2px solid #1A1443",
+              boxShadow: "6px 6px 0 #1A1443",
+              background: "white",
             }}
           >
             <img
@@ -190,7 +195,7 @@ export default async function DetailAlat({
                 position: "absolute",
                 inset: 0,
                 background:
-                  "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(18,8,38,0.85))",
+                  "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(26,20,67,0.85))",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "flex-end",
@@ -200,8 +205,8 @@ export default async function DetailAlat({
               <span
                 style={{
                   fontSize: 30,
-                  background: "rgba(0,0,0,0.45)",
-                  border: "1px solid rgba(255,255,255,0.4)",
+                  background: "white",
+                  border: "2px solid #1A1443",
                   width: 56,
                   height: 56,
                   borderRadius: 16,
@@ -215,12 +220,12 @@ export default async function DetailAlat({
               <span
                 style={{
                   background: warnaKat[a.kategori] || warnaKat.aksesoris,
-                  color: "white",
+                  color: warnaTeksKat[a.kategori] || "#5B21B6",
                   fontSize: 12,
                   fontWeight: 900,
                   padding: "7px 12px",
                   borderRadius: 999,
-                  border: "1px solid rgba(255,255,255,0.3)",
+                  border: "2px solid #1A1443",
                 }}
               >
                 {a.kategori.toUpperCase()}
@@ -232,12 +237,13 @@ export default async function DetailAlat({
                   position: "absolute",
                   top: 14,
                   right: 14,
-                  background: "#DC2626",
-                  color: "white",
+                  background: "#FECDD3",
+                  color: "#881337",
                   fontSize: 12,
                   fontWeight: 900,
                   padding: "8px 12px",
                   borderRadius: 999,
+                  border: "2px solid #1A1443",
                 }}
               >
                 ⛔ STOK HABIS!
@@ -245,7 +251,7 @@ export default async function DetailAlat({
             )}
           </div>
 
-          {/* Info kecil di bawah foto! */}
+          {/* Info kecil di bawah foto! JADI PASTEL GANTIAN! */}
           <div
             style={{
               display: "grid",
@@ -255,15 +261,15 @@ export default async function DetailAlat({
             }}
           >
             {[
-              ["🆔", "ID Alat", `#${a.id}`],
-              ["📦", "Stok Total", `${a.stok} unit`],
-              ["✅", "Tersedia", `${tersedia} unit`],
-            ].map(([icon, label, nilai]) => (
+              ["🆔", "ID Alat", `#${a.id}`, "#EDE9FE"],
+              ["📦", "Stok Total", `${a.stok} unit`, "#DBEAFE"],
+              ["✅", "Tersedia", `${tersedia} unit`, "#D1FAE5"],
+            ].map(([icon, label, nilai, bg]) => (
               <div
                 key={label}
                 style={{
-                  background: "#1E103A",
-                  border: "1px solid #4C1D95",
+                  background: bg as string,
+                  border: "2px solid #1A1443",
                   borderRadius: 16,
                   padding: 12,
                   textAlign: "center",
@@ -272,9 +278,9 @@ export default async function DetailAlat({
                 <div style={{ fontSize: 20 }}>{icon}</div>
                 <div
                   style={{
-                    color: "#A78BFA",
+                    color: "#475569",
                     fontSize: 11,
-                    fontWeight: 800,
+                    fontWeight: 900,
                     marginTop: 4,
                   }}
                 >
@@ -282,7 +288,7 @@ export default async function DetailAlat({
                 </div>
                 <b
                   style={{
-                    color: "white",
+                    color: "#1A1443",
                     fontSize: 13,
                     display: "block",
                     marginTop: 2,
@@ -299,8 +305,10 @@ export default async function DetailAlat({
         <div>
           <span
             style={{
-              background: "white",
-              color: "#6D28D9",
+              display: "inline-block",
+              background: "#FDE68A",
+              border: "2px solid #1A1443",
+              color: "#1A1443",
               fontSize: 11,
               fontWeight: 900,
               padding: "6px 12px",
@@ -311,8 +319,8 @@ export default async function DetailAlat({
           </span>
           <h1
             style={{
-              color: "white",
-              fontSize: 34,
+              color: "#1A1443",
+              fontSize: "clamp(28px, 4vw, 34px)",
               fontWeight: 900,
               margin: "12px 0 0",
               lineHeight: 1.1,
@@ -322,8 +330,9 @@ export default async function DetailAlat({
           </h1>
           <p
             style={{
-              color: "#C4B5FD",
+              color: "#64748B",
               fontSize: 13,
+              fontWeight: 600,
               margin: "8px 0 0",
               lineHeight: 1.6,
             }}
@@ -332,14 +341,15 @@ export default async function DetailAlat({
               "Alat Lab DKV, siap dipakai untuk tugas, proyek, & karya terbaikmu!"}
           </p>
 
-          {/* Badge status! */}
+          {/* Badge status! JADI PASTEL! */}
           <div
             style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}
           >
             <span
               style={{
-                background: a.aktif ? "#14532D" : "#7F1D1D",
-                color: a.aktif ? "#BBF7D0" : "#FECACA",
+                background: a.aktif ? "#D1FAE5" : "#FECDD3",
+                border: "2px solid #1A1443",
+                color: a.aktif ? "#065F46" : "#881337",
                 fontSize: 12,
                 fontWeight: 900,
                 padding: "6px 12px",
@@ -350,9 +360,9 @@ export default async function DetailAlat({
             </span>
             <span
               style={{
-                background: "#1E103A",
-                border: "1px solid #4C1D95",
-                color: "#C4B5FD",
+                background: "white",
+                border: "2px solid #1A1443",
+                color: "#475569",
                 fontSize: 12,
                 fontWeight: 800,
                 padding: "6px 12px",
@@ -363,9 +373,9 @@ export default async function DetailAlat({
             </span>
             <span
               style={{
-                background: "#1E103A",
-                border: "1px solid #4C1D95",
-                color: "#C4B5FD",
+                background: "white",
+                border: "2px solid #1A1443",
+                color: "#475569",
                 fontSize: 12,
                 fontWeight: 800,
                 padding: "6px 12px",
@@ -376,14 +386,15 @@ export default async function DetailAlat({
             </span>
           </div>
 
-          {/* KOTAK STOK! */}
+          {/* KOTAK STOK! JADI KREM! */}
           <div
             style={{
-              background: "linear-gradient(135deg,#1E103A,#3B0764)",
-              border: "1px solid #7C3AED",
+              background: "#FFF7ED",
+              border: "2px solid #1A1443",
               borderRadius: 20,
               padding: 16,
               marginTop: 16,
+              boxShadow: "4px 4px 0 #1A1443",
             }}
           >
             <div
@@ -395,21 +406,22 @@ export default async function DetailAlat({
             >
               <div>
                 <div
-                  style={{ color: "#A78BFA", fontSize: 11, fontWeight: 800 }}
+                  style={{ color: "#475569", fontSize: 11, fontWeight: 900 }}
                 >
                   STOK TERSEDIA SEKARANG
                 </div>
-                <b style={{ color: "white", fontSize: 32, lineHeight: 1 }}>
+                <b style={{ color: "#1A1443", fontSize: 32, lineHeight: 1 }}>
                   {tersedia}{" "}
-                  <span style={{ fontSize: 14, color: "#C4B5FD" }}>
+                  <span style={{ fontSize: 14, color: "#64748B" }}>
                     / {a.stok} unit
                   </span>
                 </b>
               </div>
               <span
                 style={{
-                  background: tersedia > 0 ? "#14532D" : "#7F1D1D",
-                  color: tersedia > 0 ? "#BBF7D0" : "#FECACA",
+                  background: tersedia > 0 ? "#D1FAE5" : "#FECDD3",
+                  border: "2px solid #1A1443",
+                  color: tersedia > 0 ? "#065F46" : "#881337",
                   fontSize: 12,
                   fontWeight: 900,
                   padding: "6px 12px",
@@ -423,11 +435,11 @@ export default async function DetailAlat({
             <div
               style={{
                 height: 10,
-                background: "#120826",
+                background: "white",
                 borderRadius: 999,
                 marginTop: 12,
                 overflow: "hidden",
-                border: "1px solid #4C1D95",
+                border: "2px solid #1A1443",
               }}
             >
               <div
@@ -439,21 +451,29 @@ export default async function DetailAlat({
                 }}
               />
             </div>
-            <div style={{ fontSize: 12, color: "#C4B5FD", marginTop: 8 }}>
-              📦 <b style={{ color: "white" }}>{terpakai} unit</b> sedang
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 600,
+                color: "#475569",
+                marginTop: 8,
+              }}
+            >
+              📦 <b style={{ color: "#1A1443" }}>{terpakai} unit</b> sedang
               dipinjam (menunggu + dipinjam) • Stok tersedia = stok total -
               dipinjam!
             </div>
             {tersedia <= 0 && (
               <div
                 style={{
-                  background: "#7F1D1D",
-                  color: "white",
+                  background: "#FFE4E6",
+                  border: "2px solid #FB7185",
+                  color: "#881337",
                   padding: 10,
                   borderRadius: 12,
                   marginTop: 10,
                   fontSize: 12,
-                  fontWeight: 700,
+                  fontWeight: 800,
                 }}
               >
                 ⛔ Stok habis! Coba alat lain yang se-kategori di bawah, atau
@@ -477,14 +497,14 @@ export default async function DetailAlat({
                 style={{
                   flex: 1,
                   textAlign: "center",
-                  background: "linear-gradient(90deg,#F59E0B,#EC4899)",
+                  background: "#1A1443",
                   color: "white",
                   padding: "14px",
                   borderRadius: 999,
                   fontWeight: 900,
                   textDecoration: "none",
                   fontSize: 14,
-                  boxShadow: "0 10px 30px rgba(236,72,153,0.4)",
+                  boxShadow: "3px 3px 0 #F59E0B",
                 }}
               >
                 📝 Ajukan Pinjam Alat Ini →
@@ -494,8 +514,8 @@ export default async function DetailAlat({
                 style={{
                   flex: 1,
                   textAlign: "center",
-                  background: "#374151",
-                  color: "white",
+                  background: "#E2E8F0",
+                  color: "#64748B",
                   padding: "14px",
                   borderRadius: 999,
                   fontWeight: 900,
@@ -508,8 +528,9 @@ export default async function DetailAlat({
             <Link
               href="/cek"
               style={{
-                background: "white",
-                color: "#6D28D9",
+                background: "#FDE68A",
+                border: "2px solid #1A1443",
+                color: "#1A1443",
                 padding: "14px 20px",
                 borderRadius: 999,
                 fontWeight: 900,
@@ -521,17 +542,17 @@ export default async function DetailAlat({
             </Link>
           </div>
 
-          {/* ATURAN PINJAM! */}
+          {/* ATURAN PINJAM! JADI PUTIH! */}
           <div
             style={{
-              background: "#1E103A",
-              border: "1px solid #4C1D95",
+              background: "white",
+              border: "2px solid #1A1443",
               borderRadius: 20,
               padding: 16,
               marginTop: 14,
             }}
           >
-            <b style={{ color: "white", fontSize: 14 }}>
+            <b style={{ color: "#1A1443", fontSize: 14 }}>
               Aturan Pinjam Alat Ini 🎯
             </b>
             <div
@@ -543,16 +564,16 @@ export default async function DetailAlat({
               }}
             >
               {[
-                ["1️⃣", "Jumlah 1-5", "Per pinjam!"],
-                ["2️⃣", "Maks 2 Aktif", "Per orang!"],
-                ["3️⃣", "Maks 3 Hari", "Pinjam-Kembali!"],
-                ["4️⃣", "Bukan Sab/Ming", "Lab tutup!"],
-              ].map(([icon, judul, desc]) => (
+                ["1⃣", "Jumlah 1-5", "Per pinjam!", "#FCE7F3"],
+                ["2⃣", "Maks 2 Aktif", "Per orang!", "#DBEAFE"],
+                ["3⃣", "Maks 3 Hari", "Pinjam-Kembali!", "#FEF3C7"],
+                ["4⃣", "Bukan Sab/Ming", "Lab tutup!", "#D1FAE5"],
+              ].map(([icon, judul, desc, bg]) => (
                 <div
                   key={judul}
                   style={{
-                    background: "#120826",
-                    border: "1px solid #4C1D95",
+                    background: bg as string,
+                    border: "2px solid #1A1443",
                     borderRadius: 12,
                     padding: 10,
                   }}
@@ -560,7 +581,7 @@ export default async function DetailAlat({
                   <span style={{ fontSize: 16 }}>{icon}</span>
                   <b
                     style={{
-                      color: "white",
+                      color: "#1A1443",
                       fontSize: 12,
                       display: "block",
                       marginTop: 4,
@@ -568,14 +589,19 @@ export default async function DetailAlat({
                   >
                     {judul}
                   </b>
-                  <div style={{ color: "#A78BFA", fontSize: 11 }}>{desc}</div>
+                  <div
+                    style={{ color: "#475569", fontSize: 11, fontWeight: 600 }}
+                  >
+                    {desc}
+                  </div>
                 </div>
               ))}
             </div>
             <p
               style={{
-                color: "#A78BFA",
+                color: "#64748B",
                 fontSize: 11,
+                fontWeight: 600,
                 margin: "10px 0 0",
                 lineHeight: 1.6,
               }}
@@ -587,15 +613,27 @@ export default async function DetailAlat({
         </div>
       </div>
 
-      {/* ============ ALAT LAIN YANG MIRIP! 👈 BARU! ============ */}
+      {/* ============ ALAT LAIN YANG MIRIP! JADI PUTIH! ============ */}
       {listMirip.length > 0 && (
         <div style={{ marginTop: 24 }}>
           <h2
-            style={{ color: "white", fontSize: 22, fontWeight: 900, margin: 0 }}
+            style={{
+              color: "#1A1443",
+              fontSize: 22,
+              fontWeight: 900,
+              margin: 0,
+            }}
           >
             Alat Lain yang Mirip! 🎬
           </h2>
-          <p style={{ color: "#C4B5FD", fontSize: 13, margin: "4px 0 0" }}>
+          <p
+            style={{
+              color: "#64748B",
+              fontSize: 13,
+              fontWeight: 600,
+              margin: "4px 0 0",
+            }}
+          >
             Masih se-kategori {a.kategori}, siapa tau kamu suka yang ini juga!
           </p>
           <div
@@ -612,12 +650,13 @@ export default async function DetailAlat({
                 href={`/alat/${m.id}`}
                 style={{
                   textDecoration: "none",
-                  color: "white",
-                  background: "linear-gradient(180deg,#2E1065,#1E103A)",
-                  border: "1px solid #4C1D95",
+                  color: "#1A1443",
+                  background: "white",
+                  border: "2px solid #1A1443",
                   borderRadius: 20,
                   overflow: "hidden",
                   display: "block",
+                  boxShadow: "3px 3px 0 #1A1443",
                 }}
               >
                 <img
@@ -634,7 +673,14 @@ export default async function DetailAlat({
                   <b style={{ fontSize: 15, display: "block" }}>
                     {iconAlat(m.kategori, m.nama)} {m.nama}
                   </b>
-                  <div style={{ color: "#C4B5FD", fontSize: 12, marginTop: 4 }}>
+                  <div
+                    style={{
+                      color: "#64748B",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      marginTop: 4,
+                    }}
+                  >
                     📦 Stok {m.stok} unit •{" "}
                     {m.keterangan?.slice(0, 40) || "Alat Lab DKV"}...
                   </div>
@@ -643,7 +689,8 @@ export default async function DetailAlat({
                       display: "block",
                       textAlign: "center",
                       marginTop: 10,
-                      background: "linear-gradient(90deg,#F59E0B,#EC4899)",
+                      background: "#1A1443",
+                      color: "white",
                       padding: "10px",
                       borderRadius: 999,
                       fontWeight: 900,
@@ -666,12 +713,12 @@ export default async function DetailAlat({
         <Link
           href="/alat"
           style={{
-            background: "#1E103A",
-            border: "1px solid #4C1D95",
-            color: "white",
+            background: "white",
+            border: "2px solid #1A1443",
+            color: "#1A1443",
             padding: "12px 20px",
             borderRadius: 999,
-            fontWeight: 800,
+            fontWeight: 900,
             textDecoration: "none",
             fontSize: 13,
           }}
@@ -681,8 +728,9 @@ export default async function DetailAlat({
         <Link
           href={`/alat?kategori=${a.kategori}`}
           style={{
-            background: "white",
-            color: "#6D28D9",
+            background: "#FDE68A",
+            border: "2px solid #1A1443",
+            color: "#1A1443",
             padding: "12px 20px",
             borderRadius: 999,
             fontWeight: 900,

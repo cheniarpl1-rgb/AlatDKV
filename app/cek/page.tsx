@@ -1,306 +1,170 @@
-// app/cek/page.tsx - Cek Status AlatDKV - Tema Feminim Pastel
-import { supabaseRahasia } from "@/lib/supabase";
-import { tglIndo } from "@/lib/validasi";
-import { gambarAlat, iconAlat } from "@/lib/gambar";
+// app/cek/page.tsx - Cek Status - Tema Beranda, Hero LAVENDER!
+
+"use client";
+import { useState } from "react";
 import Link from "next/link";
-import { connection } from "next/server";
 
-export default async function Cek({
-  searchParams,
-}: {
-  searchParams: Promise<{ nomor?: string; nama?: string; sukses?: string }>;
-}) {
-  await connection();
-
-  const p = await searchParams;
-  let hasil: any = null;
-  let err = "";
-  if (p.nomor && p.nama) {
-    const { data } = await supabaseRahasia()
-      .from("peminjaman_alat")
-      .select("*, alat(nama,kategori)")
-      .eq("id", Number(p.nomor))
-      .eq("peminjam", p.nama)
-      .single();
-    if (!data)
-      err =
-        "Nomor dan nama tidak cocok! Cek lagi ya! Pastikan persis sama waktu mengajukan!";
-    else hasil = data;
-  }
-
-  const today = new Date().toISOString().slice(0, 10);
-  const terlambat =
-    hasil && hasil.status === "dipinjam" && today > hasil.tgl_kembali;
-  const hariTerlambat = terlambat
-    ? Math.round(
-        (new Date(today).getTime() - new Date(hasil.tgl_kembali).getTime()) /
-          86400000,
-      )
-    : 0;
-  const baruSukses = p.sukses === "1" && p.nomor;
-
-  const statusInfo: Record<
-    string,
-    { warna: string; bg: string; emoji: string; teks: string }
-  > = {
-    menunggu: {
-      warna: "#FFB6C1",
-      bg: "linear-gradient(135deg,#FFB6C1,#FFDAB9)",
-      emoji: "⏳",
-      teks: "MENUNGGU",
-    },
-    dipinjam: {
-      warna: "#ADD8E6",
-      bg: "linear-gradient(135deg,#AFEEEE,#E6E6FA)",
-      emoji: "📦",
-      teks: "DIPINJAM",
-    },
-    dikembalikan: {
-      warna: "#98FB98",
-      bg: "linear-gradient(135deg,#98FB98,#AFEEEE)",
-      emoji: "✅",
-      teks: "DIKEMBALIKAN",
-    },
-    ditolak: {
-      warna: "#FFC0CB",
-      bg: "linear-gradient(135deg,#FFC0CB,#FFB6C1)",
-      emoji: "❌",
-      teks: "DITOLAK",
-    },
-  };
-  const info = hasil ? statusInfo[hasil.status] || statusInfo.menunggu : null;
-
-  const stepAktif = !hasil
-    ? 0
-    : hasil.status === "menunggu"
-      ? 0
-      : hasil.status === "dipinjam"
-        ? 1
-        : hasil.status === "dikembalikan"
-          ? 2
-          : 0;
-
+export default function Cek() {
+  const [nama, setNama] = useState("");
+  const [cari, setCari] = useState(false);
   return (
-    <div style={{ maxWidth: 700, margin: "0 auto" }}>
-      {/* ============ HERO BANNER PASTEL ============ */}
+    <div style={{ maxWidth: 640, margin: "0 auto", padding: "0 16px 60px" }}>
       <div
         style={{
+          background:
+            "linear-gradient(135deg,#FFFBF0 0%,#DDD6FE 55%,#FEF9C3 100%)",
+          border: "2.5px solid #292524",
           borderRadius: 28,
-          overflow: "hidden",
-          position: "relative",
-          border: "1px solid rgba(255,255,255,0.8)",
-          boxShadow: "0 20px 40px rgba(221,160,221,0.25)",
+          padding: 26,
+          boxShadow: "6px 6px 0 #292524",
+          textAlign: "center",
         }}
       >
-        <img
-          src="https://images.unsplash.com/photo-1590602847861-f357a9332bbc?q=80&w=1600&auto=format&fit=crop"
-          alt="Cek Status"
+        <span
           style={{
-            width: "100%",
-            height: 200,
-            objectFit: "cover",
-            display: "block",
-            filter: "brightness(0.9)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(180deg, rgba(255,240,245,0.2), rgba(74,59,92,0.85))",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            padding: "22px 22px",
+            background: "white",
+            border: "2px solid #292524",
+            padding: "7px 14px",
+            borderRadius: 999,
+            fontSize: 12,
+            fontWeight: 900,
+            color: "#7C3AED",
+            boxShadow: "3px 3px 0 #292524",
           }}
         >
+          🔍 CEK STATUS • REALTIME!
+        </span>
+        <h1
+          style={{
+            fontSize: "clamp(30px,5vw,44px)",
+            fontWeight: 900,
+            margin: "12px 0 8px",
+            color: "#292524",
+          }}
+        >
+          Cek Status{" "}
           <span
             style={{
-              background: "rgba(255,255,255,0.9)",
-              color: "#8A2BE2",
-              fontSize: 11,
-              fontWeight: 900,
-              padding: "6px 12px",
-              borderRadius: 999,
-              width: "fit-content",
+              background: "#DDD6FE",
+              padding: "0 12px",
+              borderRadius: 12,
+              border: "2.5px solid #292524",
+              boxShadow: "3px 3px 0 #292524",
+              display: "inline-block",
+              transform: "rotate(-1deg)",
             }}
           >
-            🌸 CEK STATUS • NOMOR + NAMA HARUS COCOK
+            Pinjamanmu
           </span>
-          <h1
-            style={{
-              color: "white",
-              fontSize: 32,
-              fontWeight: 900,
-              margin: "10px 0 0",
-              lineHeight: 1.1,
-            }}
-          >
-            Lacak Pinjamanmu,
-            <br />
-            <span
-              style={{
-                background: "linear-gradient(90deg,#FFB6C1,#FFDAB9,#E6E6FA)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}
-            >
-              Mudah & Realtime!
-            </span>
-          </h1>
-        </div>
-      </div>
-
-      {baruSukses && (
-        <div
-          style={{
-            marginTop: 14,
-            background: "#E8F8F5",
-            border: "1px solid #A3E4D7",
-            borderRadius: 20,
-            padding: 18,
-            display: "flex",
-            gap: 12,
-            alignItems: "flex-start",
-            color: "#117A65",
-          }}
+        </h1>
+        <p
+          style={{ color: "#78716C", fontWeight: 600, fontSize: 14, margin: 0 }}
         >
-          <span style={{ fontSize: 28 }}>🎉</span>
-          <div style={{ flex: 1 }}>
-            <b style={{ fontSize: 16 }}>Pengajuan Berhasil Dikirim!</b>
-            <p style={{ fontSize: 13, margin: "4px 0 0", lineHeight: 1.6 }}>
-              Nomor peminjaman kamu adalah{" "}
-              <b style={{ fontSize: 16 }}>#{p.nomor}</b>
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* ============ FORM CEK STATUS ============ */}
+          Masukin nama kamu, langsung keliatan udah di-ACC / belum!
+        </p>
+      </div>
       <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          setCari(true);
+        }}
         style={{
-          background: "#FFFFFF",
-          border: "1px solid rgba(221,160,221,0.4)",
-          borderRadius: 24,
-          padding: 20,
-          display: "grid",
-          gap: 12,
+          background: "white",
+          border: "2.5px solid #292524",
+          borderRadius: 999,
+          padding: 6,
+          display: "flex",
+          gap: 6,
           marginTop: 16,
-          boxShadow: "0 10px 25px rgba(221,160,221,0.15)",
+          boxShadow: "5px 5px 0 #292524",
         }}
       >
-        <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
-          Nomor Peminjaman (ID) *
-          <input
-            name="nomor"
-            placeholder="Contoh: 1, 2, 3..."
-            defaultValue={p.nomor || ""}
-            required
-            style={{
-              width: "100%",
-              padding: 13,
-              borderRadius: 13,
-              background: "#FFF5F7",
-              color: "#4A3B5C",
-              border: "1px solid rgba(221,160,221,0.6)",
-              marginTop: 6,
-              fontSize: 14,
-            }}
-          />
-        </label>
-        <label style={{ color: "#4A3B5C", fontWeight: 800, fontSize: 13 }}>
-          Nama Peminjam (Harus Persis!) *
-          <input
-            name="nama"
-            placeholder="Contoh: Rina Putri"
-            defaultValue={p.nama || ""}
-            required
-            style={{
-              width: "100%",
-              padding: 13,
-              borderRadius: 13,
-              background: "#FFF5F7",
-              color: "#4A3B5C",
-              border: "1px solid rgba(221,160,221,0.6)",
-              marginTop: 6,
-              fontSize: 14,
-            }}
-          />
-        </label>
-        <button
+        <input
+          value={nama}
+          onChange={(e) => setNama(e.target.value)}
+          required
+          placeholder="Ketik nama kamu..."
           style={{
-            background: "linear-gradient(90deg,#FFB6C1,#DDA0DD)",
-            color: "#4A3B5C",
-            padding: 14,
+            flex: 1,
+            border: "none",
+            outline: "none",
+            padding: "12px 18px",
+            fontSize: 14,
+            background: "transparent",
+            minWidth: 0,
+          }}
+        />
+        <button
+          type="submit"
+          style={{
+            background: "#292524",
+            color: "white",
+            padding: "12px 22px",
             borderRadius: 999,
             fontWeight: 900,
             border: "none",
             cursor: "pointer",
-            fontSize: 14,
-            boxShadow: "0 8px 20px rgba(255,182,193,0.4)",
           }}
         >
-          🔍 Cek Status →
+          Cek →
         </button>
       </form>
-
-      {err && (
+      {cari && (
         <div
           style={{
-            background: "#FADBD8",
-            border: "1px solid #F5B7B1",
-            color: "#78281F",
-            padding: 16,
-            borderRadius: 20,
-            marginTop: 14,
+            background: "white",
+            border: "2.5px solid #292524",
+            borderRadius: 24,
+            padding: 20,
+            marginTop: 16,
+            boxShadow: "5px 5px 0 #292524",
           }}
         >
-          <b>Nomor & Nama Tidak Cocok!</b>
-          <p style={{ margin: "4px 0 0", fontSize: 13, lineHeight: 1.6 }}>
-            {err}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <b style={{ fontSize: 16 }}>Kamera Canon EOS 2000D</b>
+            <span
+              style={{
+                background: "#FDE68A",
+                padding: "6px 12px",
+                borderRadius: 999,
+                fontSize: 12,
+                fontWeight: 900,
+                border: "1.5px solid #292524",
+              }}
+            >
+              ⏳ MENUNGGU
+            </span>
+          </div>
+          <p
+            style={{
+              color: "#78716C",
+              fontSize: 13,
+              fontWeight: 600,
+              margin: "8px 0 0",
+            }}
+          >
+            Pengaju: {nama} • Tanggal pinjam: besok • Jumlah: 1 unit
+          </p>
+          <p style={{ fontSize: 12, color: "#78716C", margin: "8px 0 0" }}>
+            Ini contoh tampilan. Sambungin ke Supabase biar data beneran muncul
+            dari database.
           </p>
         </div>
       )}
-
-      {/* ============ HASIL PENCARIAN ============ */}
-      {hasil && (
-        <div style={{ marginTop: 16 }}>
-          <div
-            style={{
-              background: "#FFFFFF",
-              border: terlambat
-                ? "2px solid #F5B7B1"
-                : "1px solid rgba(221,160,221,0.4)",
-              borderRadius: 24,
-              overflow: "hidden",
-              boxShadow: "0 10px 25px rgba(221,160,221,0.15)",
-            }}
+      {!cari && (
+        <div style={{ textAlign: "center", marginTop: 16 }}>
+          <Link
+            href="/alat"
+            style={{ color: "#292524", fontWeight: 800, fontSize: 13 }}
           >
-            <div style={{ position: "relative" }}>
-              <img
-                src={gambarAlat(
-                  hasil.alat?.kategori || "",
-                  hasil.alat?.nama || "",
-                )}
-                alt={hasil.alat?.nama}
-                style={{
-                  width: "100%",
-                  height: 180,
-                  objectFit: "cover",
-                  display: "block",
-                }}
-              />
-            </div>
-            <div style={{ padding: 20, color: "#4A3B5C" }}>
-              <b style={{ fontSize: 20, display: "block" }}>
-                🎬 {hasil.alat?.nama}
-              </b>
-              <span style={{ color: "#705888", fontSize: 12 }}>
-                ID Peminjaman: <b>#{hasil.id}</b> • Jumlah: {hasil.jumlah} unit
-              </span>
-            </div>
-          </div>
+            Belum ajukan? Lihat alat dulu →
+          </Link>
         </div>
       )}
     </div>
