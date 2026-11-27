@@ -1,38 +1,170 @@
-/* GLOBALS - PASTEL NONJOL, MODERN */
+/* app/globals.css - KODE LENGKAP - Gerak otomatis buat HP tanpa kursor */
+
+html,
 body {
-  background:
-    radial-gradient(
-      900px 500px at 5% 0%,
-      #ffc9dd 0%,
-      rgba(255, 201, 221, 0) 60%
-    ),
-    radial-gradient(
-      900px 500px at 95% 10%,
-      #ffe9a8 0%,
-      rgba(255, 233, 168, 0) 60%
-    ),
-    radial-gradient(
-      900px 600px at 0% 45%,
-      #bdefff 0%,
-      rgba(189, 239, 255, 0) 60%
-    ),
-    radial-gradient(
-      900px 600px at 100% 55%,
-      #d5c6ff 0%,
-      rgba(213, 198, 255, 0) 60%
-    ),
-    radial-gradient(
-      900px 500px at 50% 100%,
-      #c6f6d5 0%,
-      rgba(198, 246, 213, 0) 55%
-    ),
-    linear-gradient(180deg, #fff1f5 0%, #fff7e0 35%, #eaf9ff 70%, #f3f0ff 100%) !important;
-  background-attachment: fixed !important;
-  color: #1e293b !important;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
   font-family:
-    ui-rounded,
     system-ui,
     -apple-system,
-    "Segoe UI",
     sans-serif;
+  background:
+    radial-gradient(
+      ellipse 90% 60% at 0% 0%,
+      rgba(251, 207, 232, 0.9) 0%,
+      rgba(251, 207, 232, 0) 55%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 100% 0%,
+      rgba(221, 214, 254, 0.9) 0%,
+      rgba(221, 214, 254, 0) 55%
+    ),
+    radial-gradient(
+      ellipse 90% 70% at 0% 100%,
+      rgba(253, 230, 138, 0.85) 0%,
+      rgba(253, 230, 138, 0) 60%
+    ),
+    radial-gradient(
+      ellipse 80% 70% at 100% 100%,
+      rgba(191, 219, 254, 0.9) 0%,
+      rgba(191, 219, 254, 0) 60%
+    ),
+    linear-gradient(
+      135deg,
+      #fbcfe8 0%,
+      #fde68a 22%,
+      #fef3c7 38%,
+      #bfdbfe 54%,
+      #ddd6fe 70%,
+      #fbcfe8 86%,
+      #fde68a 100%
+    );
+  background-attachment: fixed;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1,
+h2 {
+  font-family: "Baloo 2", "Fredoka", "Nunito", system-ui, sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: -1.5px !important;
+}
+
+/* ============ GERAK OTOMATIS BUAT HP - TANPA KURSOR ============ */
+@keyframes goyang-otomatis {
+  0%,
+  100% {
+    transform: rotate(-2deg) translateY(-4px) scale(1);
+  }
+  50% {
+    transform: rotate(1deg) translateY(-10px) scale(1.06);
+  }
+}
+@keyframes goyang-otomatis-2 {
+  0%,
+  100% {
+    transform: rotate(2deg) translateY(4px) scale(1);
+  }
+  50% {
+    transform: rotate(-1deg) translateY(-8px) scale(1.06);
+  }
+}
+@keyframes goyang-otomatis-3 {
+  0%,
+  100% {
+    transform: rotate(-1.5deg) translateY(-2px) scale(1);
+  }
+  50% {
+    transform: rotate(1.5deg) translateY(-10px) scale(1.05);
+  }
+}
+@keyframes lompat-kotak {
+  0%,
+  100% {
+    transform: rotate(-1.5deg) translateY(0) scale(1);
+  }
+  50% {
+    transform: rotate(1deg) translateY(-7px) scale(1.04);
+  }
+}
+@keyframes kedip-kecil {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.08);
+  }
+}
+@keyframes naik-turun-kartu {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Ini yang bikin di HP tetep nonjol + gerak sendiri, tanpa kursor */
+.kata-pinjam {
+  animation: goyang-otomatis 2.8s ease-in-out infinite;
+}
+.kata-alat {
+  animation: goyang-otomatis-2 3.2s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+.kata-dkv {
+  animation: goyang-otomatis-3 3s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+.kotak-gerak-wrap {
+  animation: lompat-kotak 3.4s ease-in-out infinite;
+}
+.kata-kecil-gradasi {
+  animation: kedip-kecil 2.6s ease-in-out infinite;
+}
+.kata-kecil-gradasi:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.kata-kecil-gradasi:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.kata-kecil-gradasi:nth-child(4) {
+  animation-delay: 0.9s;
+}
+.kata-kecil-gradasi:nth-child(5) {
+  animation-delay: 1.2s;
+}
+.pill-gerak {
+  animation: kedip-kecil 3s ease-in-out infinite;
+}
+.pill-gerak:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.pill-gerak:nth-child(3) {
+  animation-delay: 1s;
+}
+.card-pop {
+  animation: naik-turun-kartu 4s ease-in-out infinite;
+}
+.card-pop:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.card-pop:nth-child(3) {
+  animation-delay: 1s;
+}
+.card-pop:nth-child(4) {
+  animation-delay: 1.5s;
+}
+
+/* Kalau di HP disentuh, tetep nonjol juga kayak di-hover di laptop */
+.kata-gradasi:active,
+.kata-kecil-gradasi:active,
+.pill-gerak:active {
+  transform: translateY(-6px) scale(1.1) !important;
 }

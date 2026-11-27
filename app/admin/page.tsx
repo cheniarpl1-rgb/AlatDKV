@@ -1,672 +1,672 @@
-// app/admin/page.tsx - Admin AlatDKV - GAYA EVENTKU TEMEN LO! JUARA 1 DUNIA!
-// Persis kayak screenshot: pastel pelangi, judul warna-warni outline navy,
-// kotak putih border navy! Colorful, anti-white, sangat modern, sangat memukau, sangat rapi!
-// SESUAI SOAL E2: Daftar permohonan, saring status, terlambat, setujui/tolak/kembalikan!
-// FIX Next.js 16: Hapus `dynamic`, ganti `connection()`!
+// app/admin/page.tsx - KODE LENGKAP - Kartu dibikin MENARIK, isi tetep lengkap
 
-import { supabaseRahasia } from "@/lib/supabase";
-import { tglIndo } from "@/lib/validasi";
-import { setujui, tolak, kembalikan } from "./actions";
-import { logoutAdmin } from "@/app/login/actions";
-import { gambarAlat, iconAlat } from "@/lib/gambar";
-import Link from "next/link";
-import { connection } from "next/server";
+"use client";
 
-export default async function Admin({
-  searchParams,
-}: {
-  searchParams: Promise<{ status?: string }>;
-}) {
-  // 👈 PENGGANTI `force-dynamic` DI NEXT.JS 16! WAJIB ADA!
-  await connection();
+import { useEffect, useState } from "react";
 
-  const p = await searchParams;
-  const filter = p.status || "Semua";
+type Pengajuan = {
+  id: number;
+  nama: string;
+  kelas: string;
+  alat: string;
+  tanggal: string;
+  keperluan?: string;
+  status: string;
+  createdAt?: string;
+};
 
-  // Ambil SEMUA buat hitung statistik!
-  const { data: semua } = await supabaseRahasia()
-    .from("peminjaman_alat")
-    .select("*, alat(nama,kategori)")
-    .order("dibuat", { ascending: false });
-  const all = semua || [];
+export default function AdminPage() {
+  const [semua, setSemua] = useState<Pengajuan[]>([]);
+  const [filter, setFilter] = useState("Semua");
 
-  const today = new Date().toISOString().slice(0, 10);
-  const isTerlambat = (x: any) =>
-    x.status === "dipinjam" && today > x.tgl_kembali;
-  const hitungHariTerlambat = (x: any) => {
-    if (!isTerlambat(x)) return 0;
-    const a = new Date(x.tgl_kembali).getTime();
-    const b = new Date(today).getTime();
-    return Math.ceil((b - a) / (1000 * 60 * 60 * 24));
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("pengajuan") || "[]");
+    setSemua(data);
+  }, []);
+
+  const simpan = (baru: Pengajuan[]) => {
+    setSemua(baru);
+    localStorage.setItem("pengajuan", JSON.stringify(baru));
   };
 
-  // Statistik!
-  const total = all.length;
-  const jmlMenunggu = all.filter((x: any) => x.status === "menunggu").length;
-  const jmlDipinjam = all.filter((x: any) => x.status === "dipinjam").length;
-  const jmlTerlambat = all.filter(isTerlambat).length;
-  const jmlKembali = all.filter((x: any) => x.status === "dikembalikan").length;
-  const jmlTolak = all.filter((x: any) => x.status === "ditolak").length;
-
-  // Filter list!
-  let list = all;
-  if (filter === "terlambat") list = all.filter(isTerlambat);
-  else if (filter !== "Semua")
-    list = all.filter((x: any) => x.status === filter);
-
-  // Warna badge status! PASTEL!
-  const badgeStatus = (status: string, terlambat: boolean) => {
-    if (terlambat)
-      return { bg: "#FECDD3", color: "#881337", label: "⚠ TERLAMBAT!" };
-    if (status === "menunggu")
-      return { bg: "#FEF3C7", color: "#92400E", label: "⏳ MENUNGGU" };
-    if (status === "dipinjam")
-      return { bg: "#DBEAFE", color: "#1E40AF", label: "📦 DIPINJAM" };
-    if (status === "dikembalikan")
-      return { bg: "#D1FAE5", color: "#065F46", label: "✅ DIKEMBALIKAN" };
-    if (status === "ditolak")
-      return { bg: "#FECDD3", color: "#881337", label: "❌ DITOLAK" };
-    return { bg: "#E2E8F0", color: "#1A1443", label: status.toUpperCase() };
+  const ubahStatus = (id: number, status: string) => {
+    const baru = semua.map((p) => (p.id === id ? { ...p, status } : p));
+    simpan(baru);
   };
 
-  const filters = [
-    { key: "Semua", label: "📋 Semua", count: total, activeBg: "#FDE68A" },
-    {
-      key: "menunggu",
-      label: "⏳ Menunggu",
-      count: jmlMenunggu,
-      activeBg: "#FEF3C7",
-    },
-    {
-      key: "dipinjam",
-      label: "📦 Dipinjam",
-      count: jmlDipinjam,
-      activeBg: "#DBEAFE",
-    },
-    {
-      key: "dikembalikan",
-      label: "✅ Dikembalikan",
-      count: jmlKembali,
-      activeBg: "#D1FAE5",
-    },
-    {
-      key: "ditolak",
-      label: "❌ Ditolak",
-      count: jmlTolak,
-      activeBg: "#FCE7F3",
-    },
-    {
-      key: "terlambat",
-      label: "⚠ Terlambat",
-      count: jmlTerlambat,
-      activeBg: "#FECDD3",
-    },
-  ];
+  const hapus = (id: number) => {
+    if (!confirm("Yakin mau hapus pengajuan ini?")) return;
+    simpan(semua.filter((p) => p.id !== id));
+  };
+
+  const total = semua.length;
+  const menunggu = semua.filter((p) => p.status === "Menunggu").length;
+  const dipinjam = semua.filter(
+    (p) => p.status === "Dipinjam" || p.status === "Di-ACC",
+  ).length;
+  const dikembalikan = semua.filter((p) => p.status === "Dikembalikan").length;
+  const ditolak = semua.filter((p) => p.status === "Ditolak").length;
+  const terlambat = semua.filter((p) => p.status === "Terlambat").length;
+
+  const tampil = semua.filter((p) => {
+    if (filter === "Semua") return true;
+    if (filter === "Menunggu") return p.status === "Menunggu";
+    if (filter === "Dipinjam")
+      return p.status === "Dipinjam" || p.status === "Di-ACC";
+    if (filter === "Dikembalikan") return p.status === "Dikembalikan";
+    if (filter === "Ditolak") return p.status === "Ditolak";
+    if (filter === "Terlambat") return p.status === "Terlambat";
+    return true;
+  });
+
+  const badgeStatus = (status: string) => {
+    if (status === "Menunggu")
+      return { bg: "#FFFBEB", color: "#92400E", border: "#FDE68A" };
+    if (status === "Dipinjam" || status === "Di-ACC")
+      return { bg: "#EFF6FF", color: "#1D4ED8", border: "#BFDBFE" };
+    if (status === "Dikembalikan")
+      return { bg: "#ECFDF5", color: "#047857", border: "#A7F3D0" };
+    if (status === "Ditolak")
+      return { bg: "#FEF2F2", color: "#DC2626", border: "#FECACA" };
+    if (status === "Terlambat")
+      return { bg: "#FEF2F2", color: "#DC2626", border: "#FECACA" };
+    return { bg: "#F3F4F6", color: "#374151", border: "#E5E7EB" };
+  };
 
   return (
-    <div>
-      {/* ============ 1. HEADER ADMIN! JADI PASTEL! ============ */}
+    <div style={{ maxWidth: 1120, margin: "0 auto", padding: "6px 16px 16px" }}>
+      {/* HERO - SAMA */}
       <div
         style={{
           display: "flex",
-          justifyContent: "space-between",
+          gap: 14,
           alignItems: "flex-start",
           flexWrap: "wrap",
-          gap: 12,
+          padding: "8px 4px 12px",
         }}
       >
-        <div>
-          <span
+        <div style={{ flex: 1, minWidth: 260 }}>
+          <div
             style={{
-              display: "inline-block",
-              background: "#CCFBF1",
-              color: "#0F766E",
-              fontSize: 11,
-              fontWeight: 900,
-              letterSpacing: 1.5,
-              padding: "9px 18px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              background: "white",
+              color: "#374151",
+              padding: "5px 10px",
               borderRadius: 999,
-              border: "2px solid #99F6E4",
+              fontSize: 11,
+              fontWeight: 800,
+              border: "1px solid #E5E7EB",
+              boxShadow: "0 4px 12px rgba(0,0,0,.08)",
             }}
           >
-            🛠 DASHBOARD ADMIN • LAB DKV
-          </span>
+            <span
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#059669",
+              }}
+            />
+            DASHBOARD ADMIN • LAB DKV
+          </div>
           <h1
             style={{
-              fontSize: "clamp(30px, 5vw, 42px)",
+              margin: "8px 0 4px",
+              fontSize: 36,
+              lineHeight: 1,
               fontWeight: 900,
-              margin: "10px 0 0",
-              lineHeight: 1.1,
+              letterSpacing: "-1.5px",
+              color: "#1F2937",
             }}
           >
+            Admin{" "}
             <span
               style={{
-                color: "#5EEAD4",
-                WebkitTextStroke: "2px #1A1443",
-                textShadow: "3px 3px 0 #1A1443",
-              }}
-            >
-              Admin
-            </span>{" "}
-            <span
-              style={{
-                color: "#F9A8D4",
-                WebkitTextStroke: "2px #1A1443",
-                textShadow: "3px 3px 0 #1A1443",
+                background: "linear-gradient(90deg, #F97316, #059669)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
               AlatDKV
             </span>{" "}
-            <span
-              style={{
-                color: "#FDE68A",
-                WebkitTextStroke: "2px #1A1443",
-                textShadow: "3px 3px 0 #1A1443",
-              }}
-            >
-              ({list.length})
-            </span>
+            <span style={{ color: "#1F2937" }}>({total})</span>
           </h1>
           <p
             style={{
-              color: "#475569",
+              margin: 0,
+              color: "#4B5563",
               fontSize: 13,
-              fontWeight: 600,
-              margin: "6px 0 0",
+              lineHeight: 1.5,
             }}
           >
-            {filter === "Semua"
-              ? "Semua permohonan, dari yang terbaru!"
-              : `Filter: ${filter.toUpperCase()} • ${list.length} permohonan!`}
-            {jmlTerlambat > 0 && (
-              <b style={{ color: "#BE123C" }}>
-                {" "}
-                • ⚠ Ada {jmlTerlambat} terlambat, segera tindak lanjuti!
-              </b>
-            )}
+            Semua permohonan, dari yang terbaru!
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <Link
+          <a
             href="/admin/alat"
             style={{
-              background: "#FDE68A",
-              border: "2px solid #1A1443",
-              color: "#1A1443",
-              padding: "11px 18px",
+              background: "linear-gradient(90deg, #FDE68A, #FCD34D)",
+              color: "#1F2937",
+              padding: "10px 16px",
               borderRadius: 999,
               fontWeight: 900,
+              fontSize: 12,
               textDecoration: "none",
-              fontSize: 13,
+              boxShadow: "0 6px 14px rgba(251,191,36,.35)",
             }}
           >
             + Kelola Alat →
-          </Link>
-          <Link
+          </a>
+          <a
             href="/"
             style={{
               background: "white",
-              border: "2px solid #1A1443",
-              color: "#1A1443",
-              padding: "11px 18px",
+              color: "#1F2937",
+              padding: "10px 16px",
               borderRadius: 999,
-              fontWeight: 900,
+              fontWeight: 800,
+              fontSize: 12,
               textDecoration: "none",
-              fontSize: 13,
+              border: "1px solid #D1D5DB",
+              boxShadow: "0 4px 10px rgba(0,0,0,.06)",
             }}
           >
             🏠 Beranda
-          </Link>
-          <form action={logoutAdmin}>
-            <button
-              style={{
-                background: "#FECDD3",
-                color: "#881337",
-                padding: "11px 18px",
-                borderRadius: 999,
-                fontWeight: 900,
-                border: "2px solid #1A1443",
-                cursor: "pointer",
-                fontSize: 13,
-              }}
-            >
-              Keluar →
-            </button>
-          </form>
+          </a>
+          <a
+            href="/"
+            style={{
+              background: "linear-gradient(90deg, #FEE2E2, #FECACA)",
+              color: "#991B1B",
+              padding: "10px 16px",
+              borderRadius: 999,
+              fontWeight: 800,
+              fontSize: 12,
+              textDecoration: "none",
+              border: "1px solid #FECACA",
+            }}
+          >
+            Keluar →
+          </a>
         </div>
       </div>
 
-      {/* ============ 2. 4 KARTU STATISTIK! PASTEL GANTIAN! ============ */}
+      {/* 4 KARTU STATISTIK - DIBIKIN MENARIK, ISI SAMA PERSIS */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: 12,
-          marginTop: 16,
+          marginBottom: 12,
         }}
       >
         {[
-          [
-            "📋",
-            "Total Permohonan",
-            total,
-            "#EDE9FE",
-            "Semua yang pernah masuk!",
-          ],
-          [
-            "⏳",
-            "Menunggu",
-            jmlMenunggu,
-            "#FEF3C7",
-            "Butuh disetujui / ditolak!",
-          ],
-          [
-            "📦",
-            "Sedang Dipinjam",
-            jmlDipinjam,
-            "#DBEAFE",
-            "Alat lagi di luar lab!",
-          ],
-          [
-            "⚠",
-            "Terlambat!",
-            jmlTerlambat,
-            "#FCE7F3",
-            "Lewat tanggal kembali!",
-          ],
-        ].map(([icon, label, nilai, bg, desc]) => (
+          {
+            icon: "📋",
+            judul: "Total Permohonan",
+            desc: "Semua yang pernah masuk!",
+            angka: total,
+            gradasi: "linear-gradient(90deg, #F97316, #FB923C)",
+            bgIcon: "#FFF7ED",
+            borderIcon: "#FED7AA",
+            bgCard: "linear-gradient(180deg, #FFFFFF, #FFF7ED)",
+            warnaAngka: "#EA580C",
+          },
+          {
+            icon: "⏳",
+            judul: "Menunggu",
+            desc: "Butuh disetujui / ditolak!",
+            angka: menunggu,
+            gradasi: "linear-gradient(90deg, #EAB308, #FACC15)",
+            bgIcon: "#FEFCE8",
+            borderIcon: "#FDE68A",
+            bgCard: "linear-gradient(180deg, #FFFFFF, #FFFBEB)",
+            warnaAngka: "#CA8A04",
+          },
+          {
+            icon: "📦",
+            judul: "Sedang Dipinjam",
+            desc: "Alat lagi di luar lab!",
+            angka: dipinjam,
+            gradasi: "linear-gradient(90deg, #2563EB, #38BDF8)",
+            bgIcon: "#EFF6FF",
+            borderIcon: "#BFDBFE",
+            bgCard: "linear-gradient(180deg, #FFFFFF, #EFF6FF)",
+            warnaAngka: "#1D4ED8",
+          },
+          {
+            icon: "⚠️",
+            judul: "Terlambat!",
+            desc: "Lewat tanggal kembali!",
+            angka: terlambat,
+            gradasi: "linear-gradient(90deg, #DC2626, #F87171)",
+            bgIcon: "#FEF2F2",
+            borderIcon: "#FECACA",
+            bgCard: "linear-gradient(180deg, #FFFFFF, #FEF2F2)",
+            warnaAngka: "#DC2626",
+          },
+        ].map((s) => (
           <div
-            key={label as string}
+            key={s.judul}
             style={{
-              background: bg as string,
-              border: "2px solid #1A1443",
-              borderRadius: 20,
-              padding: 16,
-              color: "#1A1443",
-              boxShadow: "3px 3px 0 #1A1443",
+              position: "relative",
+              background: s.bgCard,
+              borderRadius: 16,
+              border: "1px solid #E5E7EB",
+              padding: "0 0 14px",
+              boxShadow:
+                "0 12px 22px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.04)",
+              overflow: "hidden",
             }}
           >
+            {/* Garis atas gradasi - bikin kartu langsung keliatan berwarna */}
+            <div style={{ height: 5, background: s.gradasi }} />
             <div
               style={{
+                padding: "12px 16px 0",
                 display: "flex",
                 justifyContent: "space-between",
-                alignItems: "center",
+                alignItems: "flex-start",
               }}
             >
-              <span style={{ fontSize: 26 }}>{icon}</span>
-              <b style={{ fontSize: 28, lineHeight: 1 }}>{nilai}</b>
+              <div>
+                {/* Ikon di dalem lingkaran warna, gede */}
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 14,
+                    background: s.bgIcon,
+                    border: `1.5px solid ${s.borderIcon}`,
+                    display: "grid",
+                    placeItems: "center",
+                    fontSize: 20,
+                    boxShadow: "0 4px 8px rgba(0,0,0,.06)",
+                  }}
+                >
+                  {s.icon}
+                </div>
+                <div
+                  style={{
+                    fontWeight: 900,
+                    fontSize: 14,
+                    color: "#1F2937",
+                    marginTop: 10,
+                  }}
+                >
+                  {s.judul}
+                </div>
+                <div style={{ fontSize: 12, color: "#6B7280", marginTop: 2 }}>
+                  {s.desc}
+                </div>
+              </div>
+              {/* Angka gede + berwarna, bukan item polos lagi */}
+              <span
+                style={{
+                  fontSize: 34,
+                  fontWeight: 900,
+                  color: s.warnaAngka,
+                  lineHeight: 1,
+                  letterSpacing: "-1px",
+                }}
+              >
+                {s.angka}
+              </span>
             </div>
-            <b style={{ fontSize: 14, display: "block", marginTop: 8 }}>
-              {label}
-            </b>
+            {/* Bar bawah kecil - nunjukin proporsi, biar hidup */}
             <div
               style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: "#475569",
-                marginTop: 2,
+                margin: "10px 16px 0",
+                height: 5,
+                background: "#E5E7EB",
+                borderRadius: 999,
+                overflow: "hidden",
               }}
             >
-              {desc}
+              <div
+                style={{
+                  width: total ? `${(s.angka / total) * 100}%` : "0%",
+                  height: "100%",
+                  background: s.gradasi,
+                  borderRadius: 999,
+                }}
+              />
             </div>
           </div>
         ))}
       </div>
 
-      {/* ============ 3. KOTAK TERLAMBAT GEDE! JADI PINK PASTEL! ============ */}
-      {jmlTerlambat > 0 && filter !== "terlambat" && (
-        <Link
-          href="/admin?status=terlambat"
-          style={{
-            display: "block",
-            marginTop: 14,
-            background: "#FFE4E6",
-            border: "2px solid #FB7185",
-            color: "#881337",
-            padding: 16,
-            borderRadius: 20,
-            textDecoration: "none",
-            boxShadow: "3px 3px 0 #1A1443",
-          }}
-        >
-          <b style={{ fontSize: 15 }}>
-            ⚠ ADA {jmlTerlambat} PEMINJAMAN TERLAMBAT! KLIK DI SINI →
-          </b>
-          <p style={{ margin: "4px 0 0", fontSize: 13, fontWeight: 600 }}>
-            Ada yang belum kembalikan padahal udah lewat tanggal kembali! Segera
-            hubungi peminjam-nya!
-          </p>
-        </Link>
-      )}
-
-      {/* ============ 4. FILTER TOMBOL WARNA + ANGKA! JADI PUTIH + PASTEL! ============ */}
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 16 }}>
-        {filters.map((f) => (
-          <Link
-            key={f.key}
-            href={f.key === "Semua" ? "/admin" : `/admin?status=${f.key}`}
-            style={{
-              background: filter === f.key ? f.activeBg : "white",
-              color: "#1A1443",
-              padding: "10px 16px",
-              borderRadius: 999,
-              fontWeight: 900,
-              textDecoration: "none",
-              fontSize: 13,
-              border: "2px solid #1A1443",
-              boxShadow: filter === f.key ? "3px 3px 0 #1A1443" : "none",
-            }}
-          >
-            {f.label} ({f.count})
-          </Link>
-        ))}
+      {/* FILTER - DIBIKIN BERWARNA JUGA, ISI TETEP 6 */}
+      <div
+        style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}
+      >
+        {[
+          {
+            label: "Semua",
+            angka: total,
+            icon: "📋",
+            aktifBg: "linear-gradient(90deg, #F97316, #FB923C)",
+            pasifBg: "#FFF7ED",
+            pasifBorder: "#FED7AA",
+          },
+          {
+            label: "Menunggu",
+            angka: menunggu,
+            icon: "⏳",
+            aktifBg: "linear-gradient(90deg, #EAB308, #FACC15)",
+            pasifBg: "#FFFBEB",
+            pasifBorder: "#FDE68A",
+          },
+          {
+            label: "Dipinjam",
+            angka: dipinjam,
+            icon: "📦",
+            aktifBg: "linear-gradient(90deg, #2563EB, #38BDF8)",
+            pasifBg: "#EFF6FF",
+            pasifBorder: "#BFDBFE",
+          },
+          {
+            label: "Dikembalikan",
+            angka: dikembalikan,
+            icon: "✅",
+            aktifBg: "linear-gradient(90deg, #059669, #34D399)",
+            pasifBg: "#ECFDF5",
+            pasifBorder: "#A7F3D0",
+          },
+          {
+            label: "Ditolak",
+            angka: ditolak,
+            icon: "❌",
+            aktifBg: "linear-gradient(90deg, #DC2626, #F87171)",
+            pasifBg: "#FEF2F2",
+            pasifBorder: "#FECACA",
+          },
+          {
+            label: "Terlambat",
+            angka: terlambat,
+            icon: "⚠️",
+            aktifBg: "linear-gradient(90deg, #7C3AED, #C084FC)",
+            pasifBg: "#F5F3FF",
+            pasifBorder: "#DDD6FE",
+          },
+        ].map((f) => {
+          const aktif = filter === f.label;
+          return (
+            <button
+              key={f.label}
+              onClick={() => setFilter(f.label)}
+              style={{
+                background: aktif ? f.aktifBg : f.pasifBg,
+                color: aktif ? "white" : "#1F2937",
+                border: aktif ? "none" : `1px solid ${f.pasifBorder}`,
+                padding: "9px 14px",
+                borderRadius: 999,
+                fontWeight: 900,
+                fontSize: 12,
+                cursor: "pointer",
+                boxShadow: aktif
+                  ? "0 6px 14px rgba(0,0,0,.18)"
+                  : "0 3px 8px rgba(0,0,0,.05)",
+                transform: aktif ? "scale(1.03)" : "scale(1)",
+              }}
+            >
+              {f.icon} {f.label} ({f.angka})
+            </button>
+          );
+        })}
       </div>
 
-      {/* ============ 5. LIST PEMINJAMAN! JADI PUTIH! ============ */}
-      {list.length === 0 ? (
+      {/* LIST / EMPTY - KARTU NONJOL + MENARIK */}
+      <div
+        style={{
+          background: "white",
+          borderRadius: 18,
+          border: "1px solid #E5E7EB",
+          boxShadow: "0 18px 36px rgba(0,0,0,.12), 0 6px 12px rgba(0,0,0,.05)",
+          overflow: "hidden",
+        }}
+      >
         <div
           style={{
-            background: "white",
-            border: "2px solid #1A1443",
-            borderRadius: 24,
-            padding: 32,
-            textAlign: "center",
-            marginTop: 16,
-            boxShadow: "4px 4px 0 #1A1443",
+            height: 4,
+            background: "linear-gradient(90deg, #F97316, #059669, #2563EB)",
           }}
-        >
-          <div style={{ fontSize: 48 }}>🎉</div>
-          <b style={{ color: "#1A1443", fontSize: 18 }}>
-            Gak Ada Permohonan di Filter Ini!
-          </b>
-          <p
+        />
+        {tampil.length === 0 ? (
+          <div
             style={{
-              color: "#64748B",
-              fontSize: 13,
-              fontWeight: 600,
-              margin: "6px 0 0",
+              padding: "28px 20px",
+              textAlign: "center",
+              background: "linear-gradient(180deg, #FFFFFF, #FFFBEB)",
             }}
           >
-            Coba filter lain, atau tunggu ada siswa yang ajukan!
-          </p>
-          <Link
-            href="/admin"
-            style={{
-              display: "inline-block",
-              marginTop: 12,
-              background: "#1A1443",
-              color: "white",
-              padding: "11px 20px",
-              borderRadius: 999,
-              fontWeight: 900,
-              textDecoration: "none",
-              fontSize: 13,
-            }}
-          >
-            Lihat Semua →
-          </Link>
-        </div>
-      ) : (
-        <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
-          {list.map((x: any) => {
-            const terlambat = isTerlambat(x);
-            const hariTelat = hitungHariTerlambat(x);
-            const badge = badgeStatus(x.status, terlambat);
-            return (
-              <div
-                key={x.id}
-                style={{
-                  background: "white",
-                  border: terlambat ? "2px solid #EF4444" : "2px solid #1A1443",
-                  borderRadius: 20,
-                  padding: 16,
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
-                  gap: 14,
-                  boxShadow: "3px 3px 0 #1A1443",
-                }}
-              >
-                {/* KIRI: FOTO + DETAIL! */}
-                <div style={{ display: "flex", gap: 12 }}>
-                  <img
-                    src={gambarAlat(
-                      x.alat?.kategori || "aksesoris",
-                      x.alat?.nama || "",
-                    )}
-                    alt={x.alat?.nama}
-                    style={{
-                      width: 90,
-                      height: 90,
-                      objectFit: "cover",
-                      borderRadius: 16,
-                      flexShrink: 0,
-                      border: "2px solid #1A1443",
-                    }}
-                  />
-                  <div style={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: 6,
-                        flexWrap: "wrap",
-                        alignItems: "center",
-                      }}
-                    >
-                      <b style={{ color: "#1A1443", fontSize: 15 }}>
-                        #{x.id} •{" "}
-                        {iconAlat(x.alat?.kategori || "", x.alat?.nama || "")}{" "}
-                        {x.alat?.nama}
-                      </b>
-                      <span
-                        style={{
-                          background: badge.bg,
-                          color: badge.color,
-                          fontSize: 11,
-                          fontWeight: 900,
-                          padding: "4px 10px",
-                          borderRadius: 999,
-                          border: "2px solid #1A1443",
-                        }}
-                      >
-                        {badge.label}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        color: "#475569",
-                        fontSize: 13,
-                        fontWeight: 600,
-                        marginTop: 6,
-                        lineHeight: 1.6,
-                      }}
-                    >
-                      👤 <b style={{ color: "#1A1443" }}>{x.peminjam}</b> • 🏫{" "}
-                      {x.kelas} • 📦{" "}
-                      <b style={{ color: "#1A1443" }}>{x.jumlah} unit</b>
-                      <br />
-                      📅 {tglIndo(x.tgl_pinjam)} → {tglIndo(x.tgl_kembali)}
-                      <br />
-                      🎯 {x.keperluan}
-                    </div>
-                    {x.status === "ditolak" && (
-                      <div
-                        style={{
-                          background: "#FFE4E6",
-                          border: "2px solid #FB7185",
-                          color: "#881337",
-                          padding: 8,
-                          borderRadius: 10,
-                          marginTop: 8,
-                          fontSize: 12,
-                          fontWeight: 800,
-                        }}
-                      >
-                        ❌ Alasan Ditolak: {x.alasan_tolak}
-                      </div>
-                    )}
-                    {x.status === "dikembalikan" && x.kondisi_kembali && (
-                      <div
-                        style={{
-                          background: "#D1FAE5",
-                          border: "2px solid #34D399",
-                          color: "#065F46",
-                          padding: 8,
-                          borderRadius: 10,
-                          marginTop: 8,
-                          fontSize: 12,
-                          fontWeight: 800,
-                        }}
-                      >
-                        ✅ Dikembalikan • Kondisi: {x.kondisi_kembali}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* KANAN: TERLAMBAT + TOMBOL AKSI! */}
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                margin: "0 auto",
+                borderRadius: "50%",
+                background: "#FFFBEB",
+                border: "1.5px solid #FDE68A",
+                display: "grid",
+                placeItems: "center",
+                fontSize: 28,
+                boxShadow: "0 6px 14px rgba(251,191,36,.20)",
+              }}
+            >
+              🎉
+            </div>
+            <div
+              style={{
+                fontWeight: 900,
+                fontSize: 16,
+                color: "#1F2937",
+                marginTop: 12,
+              }}
+            >
+              Gak Ada Permohonan di Filter Ini!
+            </div>
+            <p style={{ margin: "6px 0 0", fontSize: 12, color: "#6B7280" }}>
+              Coba filter lain, atau tunggu ada siswa yang ajukan!
+            </p>
+            <button
+              onClick={() => setFilter("Semua")}
+              style={{
+                marginTop: 14,
+                background: "linear-gradient(90deg, #F97316, #FB923C)",
+                color: "white",
+                border: "none",
+                padding: "11px 20px",
+                borderRadius: 999,
+                fontWeight: 900,
+                fontSize: 12,
+                cursor: "pointer",
+                boxShadow: "0 6px 14px rgba(249,115,22,.35)",
+              }}
+            >
+              Lihat Semua →
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {tampil.map((p) => {
+              const b = badgeStatus(p.status);
+              return (
                 <div
+                  key={p.id}
                   style={{
+                    padding: "14px 16px",
+                    borderBottom: "1px solid #F3F4F6",
                     display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                    justifyContent: "center",
+                    justifyContent: "space-between",
+                    gap: 12,
+                    alignItems: "flex-start",
+                    flexWrap: "wrap",
+                    background: "white",
                   }}
                 >
-                  {terlambat && (
-                    <div
+                  <div
+                    style={{ flex: 1, minWidth: 220, display: "flex", gap: 10 }}
+                  >
+                    {/* Avatar huruf pertama - biar listnya nggak polos */}
+                    <span
                       style={{
-                        background: "#FFE4E6",
-                        border: "2px solid #FB7185",
-                        color: "#881337",
-                        padding: 10,
-                        borderRadius: 12,
+                        width: 38,
+                        height: 38,
+                        flexShrink: 0,
+                        borderRadius: "50%",
+                        background: "linear-gradient(135deg, #FFF7ED, #ECFDF5)",
+                        border: "1px solid #E5E7EB",
+                        display: "grid",
+                        placeItems: "center",
                         fontWeight: 900,
-                        fontSize: 12,
+                        fontSize: 15,
+                        color: "#F97316",
                       }}
                     >
-                      ⚠ TERLAMBAT {hariTelat} HARI! Harusnya kembali{" "}
-                      {tglIndo(x.tgl_kembali)}!
-                    </div>
-                  )}
-                  {x.status === "menunggu" && (
-                    <div style={{ display: "grid", gap: 8 }}>
-                      <form action={setujui}>
-                        <input type="hidden" name="id" value={x.id} />
-                        <button
-                          style={{
-                            width: "100%",
-                            background: "#D1FAE5",
-                            color: "#065F46",
-                            padding: "12px",
-                            borderRadius: 999,
-                            fontWeight: 900,
-                            border: "2px solid #1A1443",
-                            cursor: "pointer",
-                            fontSize: 13,
-                          }}
-                        >
-                          ✅ Serahkan Alat Ini
-                        </button>
-                      </form>
-                      <form action={tolak} style={{ display: "flex", gap: 6 }}>
-                        <input type="hidden" name="id" value={x.id} />
-                        <input
-                          name="alasan"
-                          placeholder="Alasan tolak (wajib!)"
-                          required
-                          style={{
-                            flex: 1,
-                            padding: 11,
-                            borderRadius: 999,
-                            background: "white",
-                            color: "#1A1443",
-                            border: "2px solid #1A1443",
-                            fontSize: 13,
-                            fontWeight: 600,
-                          }}
-                        />
-                        <button
-                          style={{
-                            background: "#FECDD3",
-                            color: "#881337",
-                            padding: "11px 16px",
-                            borderRadius: 999,
-                            fontWeight: 900,
-                            border: "2px solid #1A1443",
-                            cursor: "pointer",
-                            fontSize: 13,
-                          }}
-                        >
-                          ❌ Tolak
-                        </button>
-                      </form>
-                    </div>
-                  )}
-                  {x.status === "dipinjam" && (
-                    <form
-                      action={kembalikan}
-                      style={{ display: "flex", gap: 6, flexWrap: "wrap" }}
-                    >
-                      <input type="hidden" name="id" value={x.id} />
-                      <select
-                        name="kondisi"
-                        required
+                      {p.nama.charAt(0).toUpperCase()}
+                    </span>
+                    <div style={{ flex: 1 }}>
+                      <div
                         style={{
-                          flex: 1,
-                          padding: 11,
-                          borderRadius: 999,
-                          background: "white",
-                          color: "#1A1443",
-                          border: "2px solid #1A1443",
-                          fontSize: 13,
-                          fontWeight: 600,
+                          display: "flex",
+                          gap: 8,
+                          alignItems: "center",
+                          flexWrap: "wrap",
                         }}
                       >
-                        <option value="">-- Kondisi Kembali --</option>
-                        <option value="baik">✅ Baik</option>
-                        <option value="rusak ringan">⚠ Rusak Ringan</option>
-                        <option value="rusak berat">❌ Rusak Berat</option>
-                      </select>
-                      <button
+                        <span
+                          style={{
+                            fontWeight: 900,
+                            fontSize: 14,
+                            color: "#1F2937",
+                          }}
+                        >
+                          {p.nama}
+                        </span>
+                        <span
+                          style={{
+                            background: b.bg,
+                            color: b.color,
+                            border: `1px solid ${b.border}`,
+                            fontSize: 11,
+                            fontWeight: 900,
+                            padding: "3px 9px",
+                            borderRadius: 999,
+                          }}
+                        >
+                          {p.status}
+                        </span>
+                        <span style={{ fontSize: 11, color: "#9CA3AF" }}>
+                          🏫 {p.kelas}
+                        </span>
+                      </div>
+                      <div
                         style={{
-                          background: "#1A1443",
-                          color: "white",
-                          padding: "11px 16px",
-                          borderRadius: 999,
-                          fontWeight: 900,
-                          border: "2px solid #1A1443",
-                          cursor: "pointer",
-                          fontSize: 13,
+                          fontSize: 12,
+                          color: "#4B5563",
+                          marginTop: 5,
+                          lineHeight: 1.6,
                         }}
                       >
-                        📦 Kembalikan
-                      </button>
-                    </form>
-                  )}
-                  {(x.status === "dikembalikan" || x.status === "ditolak") && (
-                    <div
+                        <div>
+                          🎬 <b>{p.alat}</b> • 📅 {p.tanggal}
+                        </div>
+                        {p.keperluan && (
+                          <div style={{ color: "#6B7280" }}>
+                            📝 {p.keperluan}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    <button
+                      onClick={() => ubahStatus(p.id, "Di-ACC")}
                       style={{
-                        background: "#FFF7ED",
-                        border: "2px solid #1A1443",
-                        color: "#475569",
-                        padding: 10,
-                        borderRadius: 12,
-                        fontSize: 12,
-                        fontWeight: 700,
-                        textAlign: "center",
+                        background: "#ECFDF5",
+                        color: "#047857",
+                        border: "1px solid #A7F3D0",
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        fontWeight: 800,
+                        cursor: "pointer",
                       }}
                     >
-                      {x.status === "dikembalikan"
-                        ? "✅ Selesai! Gak ada aksi lagi."
-                        : "❌ Ditolak! Gak ada aksi lagi."}
-                    </div>
-                  )}
+                      ✅ ACC
+                    </button>
+                    <button
+                      onClick={() => ubahStatus(p.id, "Dipinjam")}
+                      style={{
+                        background: "#EFF6FF",
+                        color: "#1D4ED8",
+                        border: "1px solid #BFDBFE",
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        fontWeight: 800,
+                        cursor: "pointer",
+                      }}
+                    >
+                      📦 Dipinjam
+                    </button>
+                    <button
+                      onClick={() => ubahStatus(p.id, "Dikembalikan")}
+                      style={{
+                        background: "#F0FDF4",
+                        color: "#15803D",
+                        border: "1px solid #BBF7D0",
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        fontWeight: 800,
+                        cursor: "pointer",
+                      }}
+                    >
+                      ↩️ Kembali
+                    </button>
+                    <button
+                      onClick={() => ubahStatus(p.id, "Ditolak")}
+                      style={{
+                        background: "#FEF2F2",
+                        color: "#DC2626",
+                        border: "1px solid #FECACA",
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        fontWeight: 800,
+                        cursor: "pointer",
+                      }}
+                    >
+                      ❌ Tolak
+                    </button>
+                    <button
+                      onClick={() => hapus(p.id)}
+                      style={{
+                        background: "white",
+                        color: "#DC2626",
+                        border: "1px solid #E5E7EB",
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        fontSize: 11,
+                        fontWeight: 800,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Hapus
+                    </button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

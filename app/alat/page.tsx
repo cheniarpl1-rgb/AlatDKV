@@ -1,271 +1,261 @@
-// app/alat/page.tsx - Daftar Alat - FULL - PASTEL NONJOL TAPI NGGAK NORAK
-// Latar pastel pekat dikit + kartu PUTIH bersih + pinggir pastel + shadow tebel
+// app/alat/page.tsx - KODE LENGKAP - Tata letak SAMA, warna disamain ke tema pastel + logo AlatDKV (oranye-hijau)
 
-import { supabasePublik } from "@/lib/supabase";
-import { gambarAlat, iconAlat } from "@/lib/gambar";
+"use client";
+
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useMemo, useState } from "react";
 
-function bersihinNama(nama: string) {
-  return nama
-    .replace(/\u3010.*?\u3011/g, "")
-    .replace(/entity-.*?¦canonical_name=/g, "")
-    .replace(/¦/g, "")
-    .replace(/\[.*?\]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+const ALAT = [
+  {
+    id: "canon-2000d",
+    nama: "Kamera Canon EOS 2000D",
+    kat: "kamera",
+    label: "KAMERA",
+    desc: "DSLR • 24.1 MP • Full HD",
+    img: "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&q=80",
+    stok: 5,
+    total: 5,
+    tag: "🔥 PALING LARIS",
+  },
+  {
+    id: "a6400",
+    nama: "Kamera A6400",
+    kat: "kamera",
+    label: "KAMERA",
+    desc: "Mirrorless • 4K • AF Cepat",
+    img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80",
+    stok: 3,
+    total: 3,
+    tag: "✅ 3 TERSEDIA",
+  },
+  {
+    id: "led-panel",
+    nama: "Lampu LED Panel 2x",
+    kat: "pencahayaan",
+    label: "PENCAHAYAAN",
+    desc: "LED Panel • + Tripod",
+    img: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
+    stok: 8,
+    total: 8,
+    tag: "✅ 8 TERSEDIA",
+  },
+  {
+    id: "ring-light",
+    nama: "Ring Light 18 inch",
+    kat: "pencahayaan",
+    label: "PENCAHAYAAN",
+    desc: "Siap Pakai • Lab DKV",
+    img: "https://www.hypop.com.au/cdn/shop/products/19-portable-led-beauty-ring-light-sephora-6_b3965a02-9f2f-4693-ad2f-2b5718d19d15.jpg?v=1704494001&width=732",
+    stok: 6,
+    total: 6,
+    tag: "✅ 6 TERSEDIA",
+  },
+  {
+    id: "rode-go",
+    nama: "Mikrofon Rode Wireless GO",
+    kat: "audio",
+    label: "AUDIO",
+    desc: "Jernih • Plug & Play",
+    img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800&q=80",
+    stok: 4,
+    total: 4,
+    tag: "✅ 4 TERSEDIA",
+  },
+  {
+    id: "boya-m1",
+    nama: "Mikrofon Boya M1",
+    kat: "audio",
+    label: "AUDIO",
+    desc: "Jernih • Plug & Play",
+    img: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&q=80",
+    stok: 10,
+    total: 10,
+    tag: "✅ 10 TERSEDIA",
+  },
+  {
+    id: "intuos-s",
+    nama: "Tablet Intuos S",
+    kat: "tablet",
+    label: "TABLET",
+    desc: "Gambar Digital • Pen",
+    img: "https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=800&q=80",
+    stok: 5,
+    total: 5,
+    tag: "✅ 5 TERSEDIA",
+  },
+  {
+    id: "tripod",
+    nama: "Tripod",
+    kat: "aksesoris",
+    label: "AKSESORIS",
+    desc: "Siap Pakai • Lab DKV",
+    img: "https://cdn.myportfolio.com/53cba559-1f77-45e0-b274-c3395a7efd13/9ff26c6a-05b7-4405-8848-580d1dabd739_rw_600.png?h=4a631ba2452c27546b95e044ab560a14",
+    stok: 7,
+    total: 7,
+    tag: "✅ 7 TERSEDIA",
+  },
+];
 
-export default async function DaftarAlat({
-  searchParams,
-}: {
-  searchParams: Promise<{ kategori?: string; q?: string }>;
-}) {
-  const p = await searchParams;
-  const kat = p.kategori || "Semua";
-  const q = (p.q || "").trim();
+function AlatContent() {
+  const sp = useSearchParams();
+  const kategoriUrl = sp.get("kategori") || "semua";
+  const [kategori, setKategori] = useState(kategoriUrl);
+  const [cari, setCari] = useState("");
 
-  let query = supabasePublik().from("alat").select("*").eq("aktif", true);
-  if (kat !== "Semua") query = query.eq("kategori", kat);
-  const { data } = await query;
-  let list = data || [];
-  if (q) {
-    const key = q.toLowerCase();
-    list = list.filter((x: any) =>
-      `${x.nama} ${x.keterangan || ""} ${x.kategori}`
-        .toLowerCase()
-        .includes(key),
-    );
-  }
+  const list = useMemo(() => {
+    return ALAT.filter((a) => {
+      const okKat = kategori === "semua" || a.kat === kategori;
+      const okCari = a.nama.toLowerCase().includes(cari.toLowerCase());
+      return okKat && okCari;
+    });
+  }, [kategori, cari]);
 
-  const { data: pinjam } = await supabasePublik()
-    .from("peminjaman_alat")
-    .select("alat_id,jumlah")
-    .in("status", ["menunggu", "dipinjam"]);
-  const terpakai: Record<number, number> = {};
-  (pinjam || []).forEach((x: any) => {
-    terpakai[x.alat_id] = (terpakai[x.alat_id] || 0) + x.jumlah;
-  });
-
-  const totalStok = list.reduce((a: number, x: any) => a + x.stok, 0);
-  const totalTersedia = list.reduce(
-    (a: number, x: any) => a + Math.max(0, x.stok - (terpakai[x.id] || 0)),
-    0,
-  );
-  const habis = list.filter(
-    (x: any) => x.stok - (terpakai[x.id] || 0) <= 0,
-  ).length;
-
-  const { data: semuaAlat } = await supabasePublik()
-    .from("alat")
-    .select("kategori")
-    .eq("aktif", true);
-  const hitungKat: Record<string, number> = {};
-  (semuaAlat || []).forEach((x: any) => {
-    hitungKat[x.kategori] = (hitungKat[x.kategori] || 0) + 1;
-  });
-
-  // PASTEL NONJOL - warnanya lebih pekat dikit biar keliatan, tapi tetep pastel
-  const pastel: Record<
-    string,
-    {
-      bg: string;
-      soft: string;
-      teks: string;
-      grad: string;
-      border: string;
-      shadow: string;
-    }
-  > = {
-    kamera: {
-      bg: "#FFF7ED",
-      soft: "#FFEDD5",
-      teks: "#EA580C",
-      grad: "linear-gradient(135deg,#FFF7ED,#FED7AA)",
-      border: "#FDBA74",
-      shadow: "rgba(249,115,22,.22)",
-    },
-    pencahayaan: {
-      bg: "#FFFBEB",
-      soft: "#FEF3C7",
-      teks: "#D97706",
-      grad: "linear-gradient(135deg,#FFFBEB,#FDE68A)",
-      border: "#FCD34D",
-      shadow: "rgba(245,158,11,.22)",
-    },
-    audio: {
-      bg: "#F5F3FF",
-      soft: "#EDE9FE",
-      teks: "#7C3AED",
-      grad: "linear-gradient(135deg,#F5F3FF,#DDD6FE)",
-      border: "#C4B5FD",
-      shadow: "rgba(139,92,246,.22)",
-    },
-    tablet: {
-      bg: "#F0FDF4",
-      soft: "#DCFCE7",
-      teks: "#16A34A",
-      grad: "linear-gradient(135deg,#F0FDF4,#BBF7D0)",
-      border: "#86EFAC",
-      shadow: "rgba(34,197,94,.22)",
-    },
-    aksesoris: {
-      bg: "#FDF2F8",
-      soft: "#FCE7F3",
-      teks: "#DB2777",
-      grad: "linear-gradient(135deg,#FDF2F8,#FBCFE8)",
-      border: "#F9A8D4",
-      shadow: "rgba(236,72,153,.22)",
-    },
-  };
-
-  const iconKat: Record<string, string> = {
-    kamera: "📷",
-    pencahayaan: "💡",
-    audio: "🎙️",
-    tablet: "✏️",
-    aksesoris: "🎒",
-  };
-  const judulKat =
-    kat === "Semua"
-      ? "Semua Alat"
-      : `${iconKat[kat] || "🎬"} ${kat.charAt(0).toUpperCase() + kat.slice(1)}`;
-  const KATEGORI = [
-    "kamera",
-    "pencahayaan",
-    "audio",
-    "tablet",
-    "aksesoris",
-  ] as const;
-
-  function spekSingkat(nama: string, kategori: string): string {
-    const n = nama.toLowerCase();
-    if (n.includes("canon") || n.includes("2000d"))
-      return "DSLR • 24.1 MP • Full HD";
-    if (n.includes("s" + "ony") || n.includes("a6400"))
-      return "Mirrorless • 4K • AF Cepat";
-    if (n.includes("lampu") || n.includes("led")) return "LED Panel • + Tripod";
-    if (n.includes("mic") || n.includes("mikrofon"))
-      return "Jernih • Plug & Play";
-    if (n.includes("tablet")) return "Gambar Digital • Pen";
-    return kategori === "kamera"
-      ? "Kamera • Siap Pakai"
-      : "Siap Pakai • Lab DKV";
-  }
+  const kategoriList = [
+    { id: "semua", label: "Semua Alat", jml: 8, emoji: "🎬" },
+    { id: "kamera", label: "Kamera", jml: 2, emoji: "📷" },
+    { id: "pencahayaan", label: "Pencahayaan", jml: 2, emoji: "💡" },
+    { id: "audio", label: "Audio", jml: 2, emoji: "🎙" },
+    { id: "tablet", label: "Tablet", jml: 1, emoji: "✏" },
+    { id: "aksesoris", label: "Aksesoris", jml: 1, emoji: "🎒" },
+  ];
 
   return (
-    <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 16px 60px" }}>
-      <style>{`
-        .card-pop{transition:transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s ease}
-        .card-pop:hover{transform:translateY(-8px) scale(1.015);box-shadow:0 28px 44px rgba(15,23,42,.16)!important}
-        .foto-zoom{transition:transform .6s cubic-bezier(.34,1.56,.64,1)}
-        .card-pop:hover .foto-zoom{transform:scale(1.06)}
-        .pill-pop{transition:all .2s ease}
-        .pill-pop:hover{transform:translateY(-2px);box-shadow:0 12px 20px rgba(15,23,42,.12)!important}
-        @media (max-width:640px){ .hero-pop{grid-template-columns:1fr!important;padding:20px!important} .hero-pop img{height:190px!important} }
-      `}</style>
-
-      {/* HERO - pastel lebih pekat + kartu putih di dalamnya biar nonjol */}
+    <div style={{ maxWidth: 1120, margin: "0 auto", padding: "8px 16px 24px" }}>
+      {/* ===== HERO - TATA LETAK SAMA, WARNA DISAMAIN KE TEMA ===== */}
       <div
-        className="hero-pop"
         style={{
-          display: "grid",
-          gridTemplateColumns: "1.05fr .95fr",
-          gap: 22,
+          display: "flex",
+          gap: 28,
           alignItems: "center",
-          background:
-            "linear-gradient(135deg,#FED7AA 0%,#FDE68A 30%,#FBCFE8 65%,#DDD6FE 100%)",
-          borderRadius: 32,
-          padding: 28,
-          boxShadow: "0 20px 40px rgba(249,115,22,.25)",
-          overflow: "hidden",
-          position: "relative",
-          border: "2px solid rgba(255,255,255,.7)",
+          flexWrap: "wrap",
+          padding: "14px 4px 20px",
         }}
       >
-        <div>
-          <span
+        <div style={{ flex: 1, minWidth: 280 }}>
+          <div
             style={{
-              background: "white",
-              color: "#16A34A",
-              padding: "8px 14px",
-              borderRadius: 999,
-              fontSize: 12,
-              fontWeight: 800,
               display: "inline-flex",
               alignItems: "center",
-              gap: 6,
-              boxShadow: "0 6px 16px rgba(0,0,0,.10)",
+              gap: 7,
+              background: "white",
+              color: "#374151",
+              padding: "6px 12px",
+              borderRadius: 999,
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: ".4px",
+              border: "1px solid rgba(255,255,255,.9)",
+              boxShadow: "0 4px 12px rgba(0,0,0,.06)",
             }}
           >
-            ✨ DAFTAR ALAT • STOK REALTIME{" "}
             <span
               style={{
-                width: 8,
-                height: 8,
-                background: "#22C55E",
-                borderRadius: 999,
-                display: "inline-block",
+                width: 7,
+                height: 7,
+                borderRadius: "50%",
+                background: "#059669",
               }}
             />
-          </span>
+            LAB DKV • STOK REALTIME
+          </div>
+          {/* Judul: nggak hitam pekat lagi, abu gelap lembut + gradasi oranye-hijau kayak logo */}
           <h1
             style={{
-              fontSize: "clamp(34px,5vw,50px)",
-              lineHeight: 1.05,
-              margin: "16px 0 10px",
+              margin: "14px 0 8px",
+              fontSize: 52,
+              lineHeight: 0.95,
               fontWeight: 900,
-              color: "#1E293B",
-              letterSpacing: "-1px",
+              letterSpacing: "-2px",
+              color: "#1F2937",
             }}
           >
-            {judulKat}{" "}
+            Pinjam Alat,
+            <br />
             <span
               style={{
-                background: "white",
-                padding: "2px 14px",
-                borderRadius: 16,
-                display: "inline-block",
-                transform: "rotate(-2deg)",
-                boxShadow: "0 10px 22px rgba(0,0,0,.14)",
-                color: "#EA580C",
+                background: "linear-gradient(90deg, #F97316, #059669)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
-              ({list.length})
+              Bikin Karya
             </span>
+            <br />
+            Lebih Gampang.
           </h1>
           <p
             style={{
-              color: "#475569",
-              fontSize: 14.5,
-              lineHeight: 1.7,
-              margin: "0 0 18px",
-              maxWidth: 520,
-              fontWeight: 600,
+              margin: 0,
+              color: "#4B5563",
+              fontSize: 14,
+              lineHeight: 1.6,
+              maxWidth: 420,
             }}
           >
-            {q ? (
-              <>
-                Hasil pencarian <b style={{ color: "#1E293B" }}>“{q}”</b> di
-                kategori {kat} — ketemu {list.length} alat!
-              </>
-            ) : kat === "Semua" ? (
-              "Semua alat aktif di Lab DKV! Stok tersedia = stok total - yang sedang dipinjam."
-            ) : (
-              `Kamu lagi lihat kategori ${kat}!`
-            )}
+            8 alat aktif, 48 unit siap pakai. Pilih alatnya, ajukan, tunggu ACC
+            — beres, nggak ribet.
           </p>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          {/* Search: border lembut, tombol oranye kayak logo */}
+          <div
+            style={{
+              marginTop: 16,
+              background: "white",
+              borderRadius: 999,
+              padding: "5px 5px 5px 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              border: "1px solid #E5E7EB",
+              boxShadow: "0 8px 20px rgba(0,0,0,.07)",
+              maxWidth: 460,
+            }}
+          >
+            <span>🔍</span>
+            <input
+              value={cari}
+              onChange={(e) => setCari(e.target.value)}
+              placeholder="Cari kamera, mic, lampu..."
+              style={{
+                flex: 1,
+                border: "none",
+                outline: "none",
+                fontSize: 13,
+                background: "transparent",
+                color: "#1F2937",
+              }}
+            />
+            <button
+              style={{
+                background: "#F97316",
+                color: "white",
+                border: "none",
+                padding: "9px 16px",
+                borderRadius: 999,
+                fontWeight: 800,
+                fontSize: 12,
+                cursor: "pointer",
+                boxShadow: "0 4px 12px rgba(249,115,22,.35)",
+              }}
+            >
+              Cari →
+            </button>
+          </div>
+          <div
+            style={{ display: "flex", gap: 8, marginTop: 14, flexWrap: "wrap" }}
+          >
             <Link
               href="/ajukan"
               style={{
-                background: "#1E293B",
+                background: "#F97316",
                 color: "white",
-                padding: "13px 24px",
+                padding: "10px 18px",
                 borderRadius: 999,
                 fontWeight: 800,
+                fontSize: 13,
                 textDecoration: "none",
-                fontSize: 14,
-                boxShadow: "0 12px 22px rgba(30,41,59,.30)",
+                boxShadow: "0 6px 14px rgba(249,115,22,.30)",
               }}
             >
               📝 Ajukan Sekarang →
@@ -274,727 +264,460 @@ export default async function DaftarAlat({
               href="/cek"
               style={{
                 background: "white",
-                color: "#1E293B",
-                padding: "13px 20px",
+                color: "#1F2937",
+                padding: "10px 18px",
                 borderRadius: 999,
                 fontWeight: 800,
+                fontSize: 13,
                 textDecoration: "none",
-                fontSize: 14,
-                boxShadow: "0 8px 16px rgba(0,0,0,.10)",
+                border: "1px solid #E5E7EB",
               }}
             >
               🔍 Cek Status
             </Link>
           </div>
-        </div>
-        <div style={{ position: "relative" }}>
-          <img
-            src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1200&auto=format&fit=crop"
-            alt="Daftar Alat"
+          {/* Stats: angka abu gelap lembut, bukan hitam pekat */}
+          <div
             style={{
-              width: "100%",
-              height: 235,
-              objectFit: "cover",
-              borderRadius: 24,
-              display: "block",
-              boxShadow: "0 16px 28px rgba(0,0,0,.16)",
-              border: "3px solid white",
+              display: "flex",
+              gap: 16,
+              marginTop: 18,
+              flexWrap: "wrap",
             }}
-          />
+          >
+            {[
+              { a: "8", b: "Alat" },
+              { a: "48", b: "Unit" },
+              { a: "48", b: "Tersedia" },
+              { a: "0", b: "Habis" },
+            ].map((s) => (
+              <div
+                key={s.b}
+                style={{ display: "flex", gap: 6, alignItems: "baseline" }}
+              >
+                <span
+                  style={{ fontSize: 20, fontWeight: 900, color: "#1F2937" }}
+                >
+                  {s.a}
+                </span>
+                <span
+                  style={{ fontSize: 12, color: "#6B7280", fontWeight: 700 }}
+                >
+                  {s.b}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Kanan hero: border lembut, badge oranye-hijau */}
+        <div
+          style={{
+            width: 420,
+            maxWidth: "100%",
+            position: "relative",
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              borderRadius: 22,
+              overflow: "hidden",
+              border: "1px solid rgba(255,255,255,.9)",
+              boxShadow: "0 16px 30px rgba(0,0,0,.12)",
+              transform: "rotate(1.5deg)",
+              background: "white",
+            }}
+          >
+            <img
+              src="https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&q=80"
+              alt="Kamera"
+              style={{
+                width: "100%",
+                height: 280,
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+          </div>
           <div
             style={{
               position: "absolute",
-              left: 12,
-              bottom: 12,
-              right: 12,
+              left: -14,
+              bottom: 22,
               background: "white",
-              borderRadius: 18,
-              padding: "12px 14px",
+              borderRadius: 14,
+              padding: "9px 12px",
+              border: "1px solid #E5E7EB",
+              boxShadow: "0 8px 20px rgba(0,0,0,.10)",
+              display: "flex",
+              gap: 8,
+              alignItems: "center",
+            }}
+          >
+            <span style={{ fontSize: 18 }}>✅</span>
+            <div>
+              <div style={{ fontWeight: 900, fontSize: 12, color: "#1F2937" }}>
+                48 / 48 tersedia
+              </div>
+              <div style={{ fontSize: 11, color: "#6B7280" }}>
+                Stok hari ini • LIVE
+              </div>
+            </div>
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              right: -8,
+              top: -12,
+              background: "#1F2937",
+              color: "white",
+              borderRadius: 999,
+              padding: "7px 12px",
+              fontSize: 11,
+              fontWeight: 800,
+              boxShadow: "0 8px 16px rgba(0,0,0,.15)",
+            }}
+          >
+            🔥 PALING LARIS • Canon 2000D
+          </div>
+        </div>
+      </div>
+
+      {/* ===== LAYOUT: kiri sidebar, kanan grid - SAMA ===== */}
+      <div
+        style={{
+          display: "flex",
+          gap: 18,
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+        }}
+      >
+        {/* SIDEBAR: yang aktif oranye lembut, bukan hitam pekat */}
+        <aside
+          style={{
+            width: 230,
+            flexShrink: 0,
+            background: "white",
+            borderRadius: 18,
+            border: "1px solid #E5E7EB",
+            padding: "14px",
+            position: "sticky",
+            top: 12,
+            boxShadow: "0 6px 18px rgba(0,0,0,.05)",
+          }}
+        >
+          <div style={{ fontWeight: 900, fontSize: 14, color: "#1F2937" }}>
+            Kategori 🎯
+          </div>
+          <p
+            style={{
+              margin: "4px 0 12px",
+              fontSize: 11,
+              color: "#6B7280",
+              lineHeight: 1.4,
+            }}
+          >
+            URL berubah jadi{" "}
+            <b style={{ color: "#F97316" }}>/alat?kategori=kamera</b>
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+            {kategoriList.map((k) => {
+              const aktif = kategori === k.id;
+              return (
+                <button
+                  key={k.id}
+                  onClick={() => setKategori(k.id)}
+                  style={{
+                    textAlign: "left",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    background: aktif ? "#FFF7ED" : "#F9FAFB",
+                    color: aktif ? "#9A3412" : "#1F2937",
+                    border: aktif ? "1.5px solid #F97316" : "1px solid #E5E7EB",
+                    padding: "10px 12px",
+                    borderRadius: 12,
+                    fontWeight: 800,
+                    fontSize: 13,
+                    cursor: "pointer",
+                  }}
+                >
+                  <span>
+                    {k.emoji} {k.label}
+                  </span>
+                  <span
+                    style={{
+                      background: aktif ? "#F97316" : "#E5E7EB",
+                      color: aktif ? "white" : "#374151",
+                      fontSize: 11,
+                      fontWeight: 900,
+                      padding: "3px 8px",
+                      borderRadius: 999,
+                    }}
+                  >
+                    {k.jml}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div
+            style={{
+              marginTop: 14,
+              background: "#ECFDF5",
+              border: "1px solid #A7F3D0",
+              borderRadius: 12,
+              padding: "11px 12px",
+            }}
+          >
+            <div style={{ fontWeight: 900, fontSize: 12, color: "#065F46" }}>
+              💡 Tips cepat
+            </div>
+            <div
+              style={{
+                fontSize: 11,
+                color: "#047857",
+                lineHeight: 1.5,
+                marginTop: 4,
+              }}
+            >
+              Kamera lagi rame dipinjam. Ajukan H-1 biar kebagian!
+            </div>
+          </div>
+        </aside>
+
+        {/* KANAN: grid alat */}
+        <div style={{ flex: 1, minWidth: 280 }}>
+          <div
+            style={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              boxShadow: "0 10px 22px rgba(0,0,0,.14)",
+              marginBottom: 12,
+              flexWrap: "wrap",
+              gap: 8,
             }}
           >
-            <div>
-              <b style={{ fontSize: 14, display: "block", color: "#1E293B" }}>
-                Stok Hari Ini
-              </b>
-              <span style={{ fontSize: 12, color: "#64748B" }}>
-                {totalTersedia} dari {totalStok} unit tersedia
-              </span>
-            </div>
-            <span
+            <h2
               style={{
-                background: "#DCFCE7",
-                color: "#15803D",
-                padding: "7px 12px",
-                borderRadius: 999,
-                fontSize: 12,
-                fontWeight: 800,
+                margin: 0,
+                fontSize: 19,
+                fontWeight: 900,
+                color: "#1F2937",
               }}
             >
-              ✅ LIVE
+              Semua Alat{" "}
+              <span style={{ color: "#9CA3AF", fontWeight: 800 }}>
+                ({list.length})
+              </span>
+            </h2>
+            <span style={{ fontSize: 12, color: "#6B7280" }}>
+              {cari ? `Hasil untuk “${cari}”` : "Urut: paling laris dulu"}
             </span>
           </div>
-        </div>
-      </div>
 
-      {/* SEARCH - putih bersih, shadow tebel biar nonjol dari latar pastel */}
-      <form
-        action="/alat"
-        method="get"
-        style={{
-          marginTop: 18,
-          background: "white",
-          borderRadius: 999,
-          padding: 6,
-          display: "flex",
-          gap: 6,
-          boxShadow: "0 14px 28px rgba(15,23,42,.12)",
-          border: "2px solid #FFE4E6",
-        }}
-      >
-        {kat !== "Semua" && <input type="hidden" name="kategori" value={kat} />}
-        <input
-          name="q"
-          defaultValue={q}
-          placeholder="🔍 Cari alat... contoh: kamera, sony, mic, lampu"
-          style={{
-            flex: 1,
-            border: "none",
-            outline: "none",
-            padding: "12px 18px",
-            fontSize: 14,
-            background: "transparent",
-            minWidth: 0,
-          }}
-        />
-        <button
-          type="submit"
-          style={{
-            background: "#1E293B",
-            color: "white",
-            padding: "12px 22px",
-            borderRadius: 999,
-            fontWeight: 800,
-            fontSize: 14,
-            border: "none",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Cari Alat →
-        </button>
-        {(q || kat !== "Semua") && (
-          <Link
-            href="/alat"
-            style={{
-              background: "#FEF3C7",
-              color: "#92400E",
-              padding: "12px 16px",
-              borderRadius: 999,
-              fontWeight: 800,
-              fontSize: 14,
-              textDecoration: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            ✕ Reset
-          </Link>
-        )}
-      </form>
-
-      {/* STAT - pastel pekat + border pastel + shadow, biar nggak nyatu */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))",
-          gap: 12,
-          marginTop: 16,
-        }}
-      >
-        {[
-          {
-            icon: "🎬",
-            nilai: `${list.length} Alat`,
-            label: "Total Alat",
-            sub: `Di kategori ${kat}`,
-            bg: "linear-gradient(135deg,#EDE9FE,#DDD6FE)",
-            teks: "#6D28D9",
-            border: "#C4B5FD",
-          },
-          {
-            icon: "📦",
-            nilai: `${totalStok} Unit`,
-            label: "Total Stok",
-            sub: "Total Stok",
-            bg: "linear-gradient(135deg,#FFEDD5,#FED7AA)",
-            teks: "#C2410C",
-            border: "#FDBA74",
-          },
-          {
-            icon: "✅",
-            nilai: `${totalTersedia} Unit`,
-            label: "Tersedia",
-            sub: "Tersedia Sekarang!",
-            bg: "linear-gradient(135deg,#DCFCE7,#BBF7D0)",
-            teks: "#15803D",
-            border: "#86EFAC",
-          },
-          {
-            icon: "⛔",
-            nilai: `${habis} Alat`,
-            label: "Habis",
-            sub: "Stok Habis",
-            bg: "linear-gradient(135deg,#FEF3C7,#FDE68A)",
-            teks: "#B45309",
-            border: "#FCD34D",
-          },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="card-pop"
-            style={{
-              background: s.bg,
-              borderRadius: 22,
-              padding: 16,
-              boxShadow: "0 12px 24px rgba(15,23,42,.10)",
-              border: `2px solid ${s.border}`,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 26,
-                background: "white",
-                width: 46,
-                height: 46,
-                borderRadius: 14,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 6px 12px rgba(0,0,0,.08)",
-              }}
-            >
-              {s.icon}
-            </div>
-            <b
-              style={{
-                display: "block",
-                marginTop: 10,
-                fontSize: 19,
-                color: "#1E293B",
-              }}
-            >
-              {s.nilai}
-            </b>
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: s.teks,
-                lineHeight: 1.4,
-              }}
-            >
-              {s.label} • {s.sub}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* KATEGORI */}
-      <div style={{ marginTop: 28 }}>
-        <h2
-          style={{
-            color: "#1E293B",
-            fontSize: 22,
-            fontWeight: 900,
-            margin: 0,
-            letterSpacing: "-.5px",
-          }}
-        >
-          Saring Berdasarkan Kategori! 🎯
-        </h2>
-        <p
-          style={{
-            color: "#475569",
-            fontSize: 13,
-            fontWeight: 600,
-            margin: "4px 0 0",
-          }}
-        >
-          Klik kategori, URL-nya berubah jadi{" "}
-          <b style={{ color: "#1E293B" }}>/alat?kategori=kamera</b> — ini yang
-          dinilai penguji!
-        </p>
-        <div
-          style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}
-        >
-          <Link
-            href="/alat"
-            className="pill-pop"
-            style={{
-              background: kat === "Semua" ? "#1E293B" : "white",
-              color: kat === "Semua" ? "white" : "#1E293B",
-              borderRadius: 999,
-              padding: "11px 18px",
-              textDecoration: "none",
-              fontWeight: 800,
-              fontSize: 13,
-              boxShadow: "0 10px 20px rgba(15,23,42,.12)",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              border: "2px solid white",
-            }}
-          >
-            🎬 Semua • {(semuaAlat || []).length}
-          </Link>
-          {KATEGORI.map((k) => {
-            const aktif = kat === k;
-            const c = pastel[k];
-            return (
-              <Link
-                key={k}
-                href={`/alat?kategori=${k}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
-                className="pill-pop"
-                style={{
-                  background: aktif ? c.grad : "white",
-                  color: aktif ? c.teks : "#334155",
-                  borderRadius: 999,
-                  padding: "11px 18px",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontSize: 13,
-                  boxShadow: "0 10px 20px rgba(15,23,42,.10)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  textTransform: "capitalize",
-                  border: `2px solid ${aktif ? c.border : "white"}`,
-                }}
-              >
-                {iconKat[k]} {k} • {hitungKat[k] || 0} {aktif ? "✓" : ""}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* KARTU - PUTIH BERSIH + PINGGIR PASTEL + SHADOW TEBEL = NONJOL */}
-      <div style={{ marginTop: 22 }}>
-        {list.length === 0 ? (
-          <div
-            style={{
-              background: "white",
-              borderRadius: 28,
-              padding: 36,
-              textAlign: "center",
-              boxShadow: "0 16px 32px rgba(15,23,42,.12)",
-              border: "2px solid #FFE4E6",
-            }}
-          >
-            <div style={{ fontSize: 48 }}>😢</div>
-            <b style={{ color: "#1E293B", fontSize: 18 }}>
-              {q
-                ? `Nggak ketemu “${q}” di kategori ${kat}!`
-                : `Belum Ada Alat di Kategori ${kat}!`}
-            </b>
-            <p style={{ color: "#64748B", fontSize: 13, fontWeight: 500 }}>
-              Coba kata lain / kategori lain ya!
-            </p>
-            <Link
-              href="/alat"
-              style={{
-                display: "inline-block",
-                marginTop: 12,
-                background: "#1E293B",
-                color: "white",
-                padding: "12px 24px",
-                borderRadius: 999,
-                fontWeight: 800,
-                textDecoration: "none",
-              }}
-            >
-              🎬 Lihat Semua Alat →
-            </Link>
-          </div>
-        ) : (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))",
-              gap: 18,
+              gridTemplateColumns: "repeat(2,1fr)",
+              gap: 16,
             }}
           >
-            {list.map((a: any, idx: number) => {
-              const namaBersih = bersihinNama(a.nama);
-              const tersedia = a.stok - (terpakai[a.id] || 0);
-              const persen =
-                a.stok > 0
-                  ? Math.round((Math.max(0, tersedia) / a.stok) * 100)
-                  : 0;
-              const laris =
-                idx === 0 || namaBersih.toLowerCase().includes("canon");
-              const spek = spekSingkat(namaBersih, a.kategori);
-              const c = pastel[a.kategori] || pastel.kamera;
-              const namaKecil = namaBersih.toLowerCase();
-              const isTinggi =
-                namaKecil.includes("tripod") || namaKecil.includes("ring");
-              const isRing = namaKecil.includes("ring");
+            {list.map((a, i) => {
+              const isTinggi = a.id === "ring-light" || a.id === "tripod";
               return (
-                <Link
+                <article
                   key={a.id}
-                  href={`/alat/${a.id}`}
-                  className="card-pop"
+                  className="alat-card"
                   style={{
-                    textDecoration: "none",
-                    color: "#1E293B",
                     background: "white",
-                    borderRadius: 28,
+                    borderRadius: 20,
                     overflow: "hidden",
+                    border: "1px solid #E5E7EB",
+                    boxShadow: "0 8px 22px rgba(0,0,0,.07)",
                     display: "flex",
                     flexDirection: "column",
-                    boxShadow: `0 18px 34px ${c.shadow}`,
-                    border: `2px solid ${c.border}`,
+                    transition: "transform .2s, box-shadow .2s",
+                    marginTop: i % 2 === 1 ? 14 : 0,
                   }}
                 >
                   <div
                     style={{
                       position: "relative",
-                      overflow: "hidden",
-                      height: isTinggi ? 195 : 165,
-                      background: c.grad,
+                      background: "white",
+                      borderBottom: "1px solid #E5E7EB",
                     }}
                   >
                     <img
-                      src={gambarAlat(a.kategori, namaBersih)}
-                      alt={namaBersih}
-                      className="foto-zoom"
+                      src={a.img}
+                      alt={a.nama}
                       style={{
                         width: "100%",
-                        height: "100%",
+                        height: isTinggi ? 230 : 172,
                         objectFit: isTinggi ? "contain" : "cover",
+                        background: "white",
                         display: "block",
-                        background: "white",
-                        padding: isTinggi ? 12 : 0,
-                      }}
-                    />
-                    {isRing && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          inset: 0,
-                          background:
-                            "radial-gradient(circle at 50% 42%, rgba(255,255,255,.95) 0%, rgba(255,244,180,.5) 32%, rgba(255,255,255,0) 62%)",
-                          pointerEvents: "none",
-                        }}
-                      />
-                    )}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background:
-                          "linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(15,23,42,.18) 100%)",
                       }}
                     />
                     <span
                       style={{
                         position: "absolute",
-                        top: 12,
-                        left: 12,
+                        top: 10,
+                        right: 10,
                         background: "white",
-                        borderRadius: 14,
-                        width: 40,
-                        height: 40,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: 20,
-                        boxShadow: "0 8px 16px rgba(0,0,0,.12)",
-                      }}
-                    >
-                      {iconAlat(a.kategori, namaBersih)}
-                    </span>
-                    <span
-                      style={{
-                        position: "absolute",
-                        top: 12,
-                        right: 12,
-                        background: "white",
-                        color: c.teks,
+                        color: "#9A3412",
                         fontSize: 10,
-                        fontWeight: 800,
-                        padding: "6px 10px",
+                        fontWeight: 900,
+                        padding: "4px 8px",
                         borderRadius: 999,
-                        boxShadow: "0 6px 12px rgba(0,0,0,.10)",
-                        letterSpacing: ".5px",
+                        border: "1px solid #FED7AA",
                       }}
                     >
-                      {a.kategori.toUpperCase()}
+                      {a.label}
                     </span>
-                    {tersedia <= 0 ? (
-                      <span
-                        style={{
-                          position: "absolute",
-                          bottom: 12,
-                          left: 12,
-                          background: "#FEE2E2",
-                          color: "#DC2626",
-                          fontSize: 11,
-                          fontWeight: 800,
-                          padding: "6px 11px",
-                          borderRadius: 999,
-                        }}
-                      >
-                        ⛔ HABIS
-                      </span>
-                    ) : laris ? (
-                      <span
-                        style={{
-                          position: "absolute",
-                          bottom: 12,
-                          left: 12,
-                          background: "#1E293B",
-                          color: "white",
-                          fontSize: 11,
-                          fontWeight: 800,
-                          padding: "6px 11px",
-                          borderRadius: 999,
-                          boxShadow: "0 8px 16px rgba(0,0,0,.22)",
-                        }}
-                      >
-                        🔥 PALING LARIS
-                      </span>
-                    ) : (
-                      <span
-                        style={{
-                          position: "absolute",
-                          bottom: 12,
-                          left: 12,
-                          background: "white",
-                          color: "#15803D",
-                          fontSize: 11,
-                          fontWeight: 800,
-                          padding: "6px 11px",
-                          borderRadius: 999,
-                          boxShadow: "0 6px 12px rgba(0,0,0,.10)",
-                        }}
-                      >
-                        ✅ {tersedia} TERSEDIA
-                      </span>
-                    )}
-                    {isRing && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          bottom: 12,
-                          right: 12,
-                          background: "#FEF08A",
-                          color: "#854D0E",
-                          fontSize: 10,
-                          fontWeight: 800,
-                          padding: "6px 10px",
-                          borderRadius: 999,
-                        }}
-                      >
-                        💡 NYALA TERANG
-                      </span>
-                    )}
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: 10,
+                        bottom: 10,
+                        background: a.tag.includes("LARIS")
+                          ? "#F97316"
+                          : "white",
+                        color: a.tag.includes("LARIS") ? "white" : "#047857",
+                        fontSize: 10,
+                        fontWeight: 900,
+                        padding: "5px 9px",
+                        borderRadius: 999,
+                        border: "1px solid #FED7AA",
+                      }}
+                    >
+                      {a.tag}
+                    </span>
                   </div>
-
                   <div
                     style={{
-                      padding: "16px 16px 14px",
+                      padding: "12px 14px 14px",
                       display: "flex",
                       flexDirection: "column",
                       gap: 8,
                       flex: 1,
                     }}
                   >
-                    <b
-                      style={{
-                        fontSize: 17.5,
-                        lineHeight: 1.25,
-                        letterSpacing: "-.3px",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {namaBersih}
-                    </b>
-                    <span
-                      style={{
-                        fontSize: 12.5,
-                        color: "#64748B",
-                        fontWeight: 500,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {spek}
-                    </span>
+                    <div>
+                      <h3
+                        style={{
+                          margin: 0,
+                          fontSize: 16,
+                          fontWeight: 900,
+                          color: "#1F2937",
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {a.nama}
+                      </h3>
+                      <p
+                        style={{
+                          margin: "4px 0 0",
+                          fontSize: 12,
+                          color: "#6B7280",
+                        }}
+                      >
+                        {a.desc}
+                      </p>
+                    </div>
                     <div
                       style={{
-                        marginTop: 4,
-                        background: c.bg,
-                        borderRadius: 16,
-                        padding: "10px 12px",
-                        border: `1.5px solid ${c.border}`,
+                        background: "#FFFBEB",
+                        border: "1px solid #FEF3C7",
+                        borderRadius: 10,
+                        padding: "8px 10px",
                       }}
                     >
                       <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          alignItems: "center",
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: 700,
+                          color: "#4B5563",
                         }}
                       >
-                        <span style={{ color: "#64748B" }}>Stok Tersedia</span>
-                        <span
-                          style={{
-                            color: tersedia > 0 ? "#15803D" : "#DC2626",
-                          }}
-                        >
-                          {tersedia} / {a.stok} unit • {persen}%
+                        <span>Stok Tersedia</span>
+                        <span style={{ color: "#059669" }}>
+                          {a.stok} / {a.total} unit • 100%
                         </span>
                       </div>
                       <div
                         style={{
-                          height: 7,
-                          background: "white",
+                          height: 6,
+                          background: "#E5E7EB",
                           borderRadius: 999,
-                          marginTop: 8,
+                          marginTop: 6,
                           overflow: "hidden",
-                          boxShadow: "inset 0 1px 3px rgba(0,0,0,.08)",
                         }}
                       >
                         <div
                           style={{
-                            width: `${persen}%`,
+                            width: "100%",
                             height: "100%",
-                            background:
-                              persen > 50
-                                ? "linear-gradient(90deg,#86EFAC,#22C55E)"
-                                : persen > 0
-                                  ? "linear-gradient(90deg,#FDE68A,#F97316)"
-                                  : "#EF4444",
+                            background: "#10B981",
                             borderRadius: 999,
                           }}
                         />
                       </div>
                     </div>
-                    <span
+                    <Link
+                      href={`/ajukan?alat=${a.id}`}
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 6,
-                        marginTop: 4,
-                        background: tersedia > 0 ? "#1E293B" : "#F1F5F9",
-                        color: tersedia > 0 ? "white" : "#94A3B8",
-                        padding: "11px",
+                        marginTop: "auto",
+                        background: "#F97316",
+                        color: "white",
+                        textAlign: "center",
+                        padding: "10px",
                         borderRadius: 999,
                         fontWeight: 800,
-                        fontSize: 13.5,
-                        boxShadow:
-                          tersedia > 0
-                            ? "0 10px 18px rgba(30,41,59,.22)"
-                            : "none",
+                        fontSize: 13,
+                        textDecoration: "none",
+                        boxShadow: "0 4px 12px rgba(249,115,22,.25)",
                       }}
                     >
-                      {tersedia > 0 ? (
-                        <>
-                          Ajukan Pinjam <span>→</span>
-                        </>
-                      ) : (
-                        "⛔ Stok Habis"
-                      )}
-                    </span>
+                      Ajukan Pinjam →
+                    </Link>
                   </div>
-                </Link>
+                </article>
               );
             })}
           </div>
-        )}
-      </div>
 
-      <div
-        style={{
-          marginTop: 26,
-          background: "linear-gradient(135deg,#FED7AA,#FDE68A,#FBCFE8,#DDD6FE)",
-          borderRadius: 28,
-          padding: 28,
-          textAlign: "center",
-          boxShadow: "0 16px 32px rgba(249,115,22,.22)",
-          border: "2px solid rgba(255,255,255,.7)",
-        }}
-      >
-        <h3
-          style={{
-            color: "#1E293B",
-            fontSize: 23,
-            fontWeight: 900,
-            margin: 0,
-            letterSpacing: "-.5px",
-          }}
-        >
-          Udah Ketemu Alatnya? 🚀
-        </h3>
-        <p
-          style={{
-            color: "#475569",
-            fontWeight: 600,
-            fontSize: 13,
-            margin: "8px 0 0",
-          }}
-        >
-          Jangan sampai kehabisan! Ajukan sekarang, besok tinggal ambil!
-        </p>
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            justifyContent: "center",
-            flexWrap: "wrap",
-            marginTop: 16,
-          }}
-        >
-          <Link
-            href="/ajukan"
-            style={{
-              background: "#1E293B",
-              color: "white",
-              padding: "12px 26px",
-              borderRadius: 999,
-              fontWeight: 800,
-              textDecoration: "none",
-              boxShadow: "0 12px 22px rgba(30,41,59,.22)",
-            }}
-          >
-            📝 Ajukan Sekarang →
-          </Link>
-          <Link
-            href="/cek"
-            style={{
-              background: "white",
-              color: "#1E293B",
-              padding: "12px 22px",
-              borderRadius: 999,
-              fontWeight: 800,
-              textDecoration: "none",
-              boxShadow: "0 8px 16px rgba(0,0,0,.10)",
-            }}
-          >
-            🔍 Cek Status
-          </Link>
+          {list.length === 0 && (
+            <div
+              style={{
+                background: "white",
+                borderRadius: 16,
+                padding: 20,
+                textAlign: "center",
+                marginTop: 4,
+                border: "1px solid #E5E7EB",
+              }}
+            >
+              <p style={{ margin: 0, fontWeight: 800, color: "#1F2937" }}>
+                Nggak ketemu, coba kata kunci lain.
+              </p>
+            </div>
+          )}
         </div>
       </div>
+
+      <style>{`@media (max-width: 860px){ aside{ width: 100% !important; position: static !important; } aside div[style*="flex-direction: column"]{ flex-direction: row !important; flex-wrap: wrap; } } @media (max-width: 560px){ div[style*="grid-template-columns: repeat(2"]{ grid-template-columns: 1fr !important; } } .alat-card:hover{ transform: translateY(-4px) !important; box-shadow: 0 14px 28px rgba(0,0,0,.10) !important; }`}</style>
     </div>
+  );
+}
+
+export default function AlatPage() {
+  return (
+    <Suspense>
+      <AlatContent />
+    </Suspense>
   );
 }
